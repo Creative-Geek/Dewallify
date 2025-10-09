@@ -1,103 +1,233 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import Image from "next/image"; // Added Image import
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { Sparkles, Copy, FileText, Wand2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+export default function DocumentFormatter() {
+  const [inputText, setInputText] = useState("");
+  const [formattedText, setFormattedText] = useState("");
+  const [isFormatting, setIsFormatting] = useState(false);
+  const { toast } = useToast();
+
+  const handleFormat = async () => {
+    if (!inputText.trim()) {
+      toast({
+        title: "Oops!",
+        description: "Please paste some text first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsFormatting(true);
+    try {
+      const response = await fetch("/api/format", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: inputText }),
+      });
+
+      const data = await response.json();
+      setFormattedText(data.formatted);
+
+      toast({
+        title: "✨ Formatted!",
+        description: "Your document is ready",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsFormatting(false);
+    }
+  };
+
+  const handleCopy = async () => {
+    if (!formattedText) return;
+
+    await navigator.clipboard.writeText(formattedText);
+    toast({
+      title: "📋 Copied!",
+      description: "Formatted text copied to clipboard",
+    });
+  };
+
+  const handleClear = () => {
+    setInputText("");
+    setFormattedText("");
+  };
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-background p-4 md:p-8">
+      <div className="mx-auto max-w-6xl">
+        {/* Header */}
+        <div className="mb-8 text-center">
+          {/* Logo */}
+          <Image
+            src="/images/DeWallify-Logo.png"
+            alt="DeWallify Logo"
+            width={150}
+            height={150}
+            className="mx-auto mb-4"
+            priority
+          />
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2">
+            <Sparkles className="h-4 w-4 text-primary-foreground" />
+            <span className="text-sm font-medium text-primary-foreground">
+              AI Powered
+            </span>
+          </div>
+          <h1 className="mb-3 text-balance text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+            Document Formatter
+          </h1>
+          <p className="text-pretty text-lg text-muted-foreground">
+            Paste your plaintext and let AI transform it into beautifully
+            formatted content
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Main Content */}
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Input Section */}
+          <Card className="flex flex-col gap-4 rounded-[2rem] border-2 border-border bg-card p-6 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-full bg-secondary p-2">
+                <FileText className="h-5 w-5 text-secondary-foreground" />
+              </div>
+              <h2 className="text-xl font-semibold text-card-foreground">
+                Your Text
+              </h2>
+            </div>
+
+            <Textarea
+              placeholder={`Paste your plaintext here...\n\nTry something like:\n- Meeting notes\n- Email drafts\n- Article content\n- Any unformatted text!`}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              className="min-h-[300px] resize-none rounded-3xl border-2 border-border bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-primary"
+            />
+
+            <div className="flex gap-3">
+              <Button
+                onClick={handleFormat}
+                disabled={isFormatting || !inputText.trim()}
+                className="flex-1 rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+                size="lg"
+              >
+                {isFormatting ? (
+                  <>
+                    <Wand2 className="mr-2 h-5 w-5 animate-spin" />
+                    Formatting...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Format with AI
+                  </>
+                )}
+              </Button>
+
+              <Button
+                onClick={handleClear}
+                variant="outline"
+                className="rounded-full border-2 border-border bg-background text-foreground hover:bg-muted"
+                size="lg"
+              >
+                Clear
+              </Button>
+            </div>
+          </Card>
+
+          {/* Output Section */}
+          <Card className="flex flex-col gap-4 rounded-[2rem] border-2 border-border bg-card p-6 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-full bg-accent p-2">
+                <Sparkles className="h-5 w-5 text-accent-foreground" />
+              </div>
+              <h2 className="text-xl font-semibold text-card-foreground">
+                Formatted Result
+              </h2>
+            </div>
+
+            <div className="min-h-[300px] flex-1 rounded-3xl border-2 border-border bg-background p-4">
+              {formattedText ? (
+                <div className="prose prose-sm max-w-none text-foreground">
+                  <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
+                    {formattedText}
+                  </pre>
+                </div>
+              ) : (
+                <div className="flex h-full items-center justify-center text-center">
+                  <div className="space-y-2">
+                    <div className="mx-auto rounded-full bg-muted p-4">
+                      <Wand2 className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Your formatted text will appear here
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <Button
+              onClick={handleCopy}
+              disabled={!formattedText}
+              className="w-full rounded-full bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/90"
+              size="lg"
+            >
+              <Copy className="mr-2 h-5 w-5" />
+              Copy Formatted Text
+            </Button>
+          </Card>
+        </div>
+
+        {/* Features */}
+        <div className="mt-12 grid gap-4 md:grid-cols-3">
+          <Card className="rounded-3xl border-2 border-border bg-card p-6 text-center">
+            <div className="mx-auto mb-3 w-fit rounded-full bg-primary p-3">
+              <Sparkles className="h-6 w-6 text-primary-foreground" />
+            </div>
+            <h3 className="mb-2 font-semibold text-card-foreground">
+              AI Powered
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Smart formatting using advanced AI models
+            </p>
+          </Card>
+
+          <Card className="rounded-3xl border-2 border-border bg-card p-6 text-center">
+            <div className="mx-auto mb-3 w-fit rounded-full bg-secondary p-3">
+              <FileText className="h-6 w-6 text-secondary-foreground" />
+            </div>
+            <h3 className="mb-2 font-semibold text-card-foreground">
+              Professional Output
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Get document-ready formatted text instantly
+            </p>
+          </Card>
+
+          <Card className="rounded-3xl border-2 border-border bg-card p-6 text-center">
+            <div className="mx-auto mb-3 w-fit rounded-full bg-accent p-3">
+              <Copy className="h-6 w-6 text-accent-foreground" />
+            </div>
+            <h3 className="mb-2 font-semibold text-card-foreground">
+              Easy Copy
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              One-click copy to use anywhere you need
+            </p>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

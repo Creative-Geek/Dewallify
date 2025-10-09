@@ -1,0 +1,58 @@
+import { Card } from "@/components/ui/card";
+import { Sparkles, FileText, Copy } from "lucide-react";
+
+export function FeatureCards() {
+  const features = [
+    {
+      icon: (
+        <Sparkles
+          className="h-6 w-6 text-primary-foreground"
+          strokeWidth={1.5}
+        />
+      ),
+      title: "AI Powered",
+      description: "Smart formatting using advanced AI models",
+      bgColor: "bg-primary",
+    },
+    {
+      icon: (
+        <FileText
+          className="h-6 w-6 text-secondary-foreground"
+          strokeWidth={1.5}
+        />
+      ),
+      title: "Professional Output",
+      description: "Get document-ready formatted text instantly",
+      bgColor: "bg-secondary",
+    },
+    {
+      icon: (
+        <Copy className="h-6 w-6 text-accent-foreground" strokeWidth={1.5} />
+      ),
+      title: "Easy Copy",
+      description: "One-click copy to use anywhere you need",
+      bgColor: "bg-accent",
+    },
+  ];
+
+  return (
+    <div className="mt-12 grid gap-4 md:grid-cols-3">
+      {features.map((feature, index) => (
+        <Card
+          key={index}
+          className="rounded-3xl border-2 border-border bg-card p-6 text-center"
+        >
+          <div
+            className={`mx-auto mb-3 w-fit rounded-full ${feature.bgColor} p-3`}
+          >
+            {feature.icon}
+          </div>
+          <h3 className="mb-2 font-semibold text-card-foreground">
+            {feature.title}
+          </h3>
+          <p className="text-sm text-muted-foreground">{feature.description}</p>
+        </Card>
+      ))}
+    </div>
+  );
+}

@@ -99,6 +99,7 @@ export async function POST(request: NextRequest) {
 - If text is very short, don't force unnecessary structure
 - Respect creative writing style and line breaks
 - Preserve code blocks and special characters
+- User may provide additional instructions in [] like [what is the meaning of life?], you should replace those parts with their corresponding answer.
 
 Return ONLY the formatted Markdown, starting immediately with the content.`,
         },

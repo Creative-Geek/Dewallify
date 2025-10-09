@@ -1,13 +1,18 @@
-import { GoogleGenAI, HarmBlockThreshold, HarmCategory } from "@google/genai";
+import { createOpenAI } from '@ai-sdk/openai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createGroq } from '@ai-sdk/groq';
+import { createCerebras } from '@ai-sdk/cerebras';
+import { streamText, CoreMessage } from 'ai';
 import { NextRequest, NextResponse } from "next/server";
+import { HarmBlockThreshold, HarmCategory } from "@google/genai"; // Keep for safety settings enum
 
 export const maxDuration = 30;
 
 export async function POST(request: NextRequest) {
   try {
     console.log("API route called");
-    const { text } = await request.json();
-    console.log("Text received, length:", text?.length);
+    const { text, provider } = await request.json();
+    console.log("Text received, length:", text?.length, "Provider:", provider);
 
     if (!text || typeof text !== "string") {
       console.error("Invalid input text received:", typeof text);
@@ -17,43 +22,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    let llm;
 
-    // The API is available by default. Any environment-based API key checks
-    // are intentionally removed so callers can use the endpoint without a
-    // separate status probe. The AI client will still attempt to initialize
-    // using any configured GEMINI_API_KEY if present.
+    // Dynamically select the provider
+    switch (provider) {
+      case 'groq':
+        const groq = createGroq({
+          apiKey: process.env.GROQ_API_KEY,
+        });
+        llm = groq('llama3-8b-8192');
+        break;
 
-    // Initialize the Google AI client
-    console.log("Initializing Google AI client...");
-    const ai = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY,
-    });
+      case 'google':
+        const google = createGoogleGenerativeAI({
+          apiKey: process.env.GOOGLE_API_KEY, // Use GOOGLE_API_KEY for AI SDK Google provider
+        });
+        llm = google('models/gemini-1.5-pro-latest');
+        break;
 
-    const config = {
-      thinkingConfig: {
-        thinkingBudget: -1,
-      },
-      safetySettings: [
-        {
-          category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-          threshold: HarmBlockThreshold.BLOCK_NONE,
-        },
-        {
-          category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-          threshold: HarmBlockThreshold.BLOCK_NONE,
-        },
-        {
-          category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-          threshold: HarmBlockThreshold.BLOCK_NONE,
-        },
-        {
-          category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-          threshold: HarmBlockThreshold.BLOCK_NONE,
-        },
-      ],
-      systemInstruction: [
-        {
-          text: `You are a text formatter that transforms unformatted text into clean, readable Markdown. Your goal is to enhance structure and readability while preserving all original content exactly.
+      case 'cerebras':
+        const cerebras = createCerebras({
+          apiKey: process.env.CEREBRAS_API_KEY,
+        });
+        llm = cerebras('llama3.1-8b');
+        break;
+
+      default: // Default to OpenAI
+        const openai = createOpenAI({
+          apiKey: process.env.OPENAI_API_KEY,
+        });
+        llm = openai('gpt-4o');
+        break;
+    }
+
+    const systemInstruction = `You are a text formatter that transforms unformatted text into clean, readable Markdown. Your goal is to enhance structure and readability while preserving all original content exactly.
 
 ## Core Rules:
 1. **Preserve everything** - Never remove, summarize, or paraphrase any content
@@ -101,46 +103,36 @@ export async function POST(request: NextRequest) {
 - Preserve code blocks and special characters
 - User may provide additional instructions in [] like [what is the meaning of life?], you should replace those parts with their corresponding answer.
 
-Return ONLY the formatted Markdown, starting immediately with the content.`,
-        },
-      ],
-    };
+Return ONLY the formatted Markdown, starting immediately with the content.`;
 
-    const model = "gemini-flash-latest";
-    const contents = [
-      {
-        role: "user",
-        parts: [
-          {
-            text: text,
-          },
-        ],
-      },
+    // Construct messages for the AI SDK
+    const messages: CoreMessage[] = [
+      { role: 'system', content: systemInstruction },
+      { role: 'user', content: text },
     ];
 
-    console.log("Starting content generation...");
-    const response = await ai.models.generateContentStream({
-      model,
-      config,
-      contents,
-    });
-    console.log("Content generation started successfully");
+    // Note: AI SDK's streamText does not directly support safetySettings in the same way
+    // as GoogleGenAI's generateContentStream. Safety settings would typically be configured
+    // at the model provider level or handled by the model itself.
+    // For Google models, the AI SDK's createGoogleGenerativeAI might have its own way
+    // of handling safety, or it might rely on default API settings.
+    // For now, we'll omit the explicit safetySettings from the streamText call.
 
-    // Create a readable stream
+    const result = streamText({
+      model: llm,
+      messages: messages,
+    });
+
+    // Respond with the stream, extracting the formatted text
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       async start(controller) {
         try {
           let fullText = "";
-
-          for await (const chunk of response) {
-            const chunkText = chunk.text;
-            if (chunkText) {
-              fullText += chunkText;
-            }
+          for await (const chunk of result.textStream) {
+            fullText += chunk;
           }
 
-          // Send the complete formatted text
           controller.enqueue(
             encoder.encode(
               JSON.stringify({
@@ -162,6 +154,7 @@ Return ONLY the formatted Markdown, starting immediately with the content.`,
         "Cache-Control": "no-cache",
       },
     });
+
   } catch (error) {
     console.error("Error formatting text:", error);
     const errorObj = error as any;
@@ -171,12 +164,12 @@ Return ONLY the formatted Markdown, starting immediately with the content.`,
       stack: errorObj?.stack,
     });
 
-    // Check if it's a Gemini API specific error
+    // Check for specific API key errors
     if (errorObj?.message?.includes("API_KEY_INVALID")) {
       return NextResponse.json(
         {
           error:
-            "Invalid API key. Please check your GEMINI_API_KEY in .env.local",
+            "Invalid API key. Please check your environment variables for the selected provider.",
         },
         { status: 500 },
       );

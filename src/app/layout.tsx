@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster"; // Updated import
 import "./globals.css";
 
 const geistSans = Geist({
@@ -41,16 +41,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/images/DeWallify-Logo.png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <Toaster
-          position="bottom-right"
-          richColors
-          closeButton
-          duration={4000}
-        />
+        <Toaster /> {/* Toaster component from designandstyling */}
       </body>
     </html>
   );

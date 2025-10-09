@@ -80,6 +80,12 @@ export async function POST(request: NextRequest) {
 - Use tables (| pipes |) when data is clearly tabular
 - Use horizontal rules (---) sparingly to separate major sections
 - Use <center></center> tags to center titles or important text when appropriate
+- When using inline HTML, like the <center> tag, make sure to wrap the markdown text with blank lines before and after:
+<center>
+[blank line]
+# Title
+[blank line]
+</center>
 
 ## What NOT to Do:
 - Don't add content that wasn't there

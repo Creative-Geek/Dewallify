@@ -1,18 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image"; // Added Image import
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Sparkles, Copy, FileText, Wand2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
 
 export default function DocumentFormatter() {
   const [inputText, setInputText] = useState("");
   const [formattedText, setFormattedText] = useState("");
   const [isFormatting, setIsFormatting] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Configure marked to be synchronous
+    marked.setOptions({ async: false });
+    // DOMPurify is typically initialized with window, but it's already handled by the library itself
+    // when imported in a browser environment. No explicit initialization needed here.
+  }, []);
 
   const handleFormat = async () => {
     if (!inputText.trim()) {
@@ -53,11 +62,136 @@ export default function DocumentFormatter() {
   const handleCopy = async () => {
     if (!formattedText) return;
 
-    await navigator.clipboard.writeText(formattedText);
-    toast({
-      title: "📋 Copied!",
-      description: "Formatted text copied to clipboard",
-    });
+    const htmlContent = marked.parse(formattedText) as string;
+    const sanitizedHtml = DOMPurify.sanitize(htmlContent);
+
+    // Create DOCX-compatible HTML with proper styling and modern fonts
+    const docxCompatibleHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Formatted Document</title>
+          <style>
+            /* Reset and base styles */
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+              font-size: 11pt;
+              line-height: 1.4;
+              color: #000000;
+              background: white;
+            }
+
+            /* Headings */
+            h1 { font-size: 16pt; font-weight: bold; margin: 12pt 0 6pt 0; color: #000000; }
+            h2 { font-size: 14pt; font-weight: bold; margin: 10pt 0 4pt 0; color: #000000; }
+            h3 { font-size: 12pt; font-weight: bold; margin: 8pt 0 3pt 0; color: #000000; }
+            h4 { font-size: 11pt; font-weight: bold; margin: 6pt 0 2pt 0; color: #000000; }
+            h5 { font-size: 11pt; font-weight: bold; margin: 4pt 0 2pt 0; color: #000000; }
+            h6 { font-size: 11pt; font-weight: bold; margin: 3pt 0 1pt 0; color: #000000; }
+
+            /* Paragraphs */
+            p { margin: 0 0 8pt 0; line-height: 1.4; }
+
+            /* Lists */
+            ul, ol { margin: 0 0 8pt 0; padding-left: 20pt; }
+            li { margin: 2pt 0; line-height: 1.4; }
+
+            /* Bold and italic */
+            strong { font-weight: bold; }
+            em { font-style: italic; }
+
+            /* Code */
+            code {
+              font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+              background: #f5f5f5;
+              padding: 1pt 2pt;
+              border-radius: 2pt;
+            }
+            pre {
+              font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+              background: #f5f5f5;
+              padding: 6pt;
+              border-radius: 3pt;
+              margin: 0 0 8pt 0;
+              white-space: pre-wrap;
+              word-wrap: break-word;
+            }
+
+            /* Blockquotes */
+            blockquote {
+              border-left: 3pt solid #cccccc;
+              padding-left: 8pt;
+              margin: 8pt 0;
+              font-style: italic;
+              background: #f9f9f9;
+            }
+
+            /* Tables */
+            table { border-collapse: collapse; margin: 8pt 0; width: 100%; }
+            th, td {
+              border: 1pt solid #cccccc;
+              padding: 4pt 6pt;
+              vertical-align: top;
+            }
+            th { background: #f5f5f5; font-weight: bold; }
+
+            /* Links */
+            a { color: #0066cc; text-decoration: none; }
+            a:hover { text-decoration: underline; }
+
+            /* Horizontal rules */
+            hr { border: none; border-top: 1pt solid #cccccc; margin: 12pt 0; }
+          </style>
+        </head>
+        <body>
+          ${sanitizedHtml}
+        </body>
+      </html>
+    `.trim();
+
+    try {
+      // For better DOCX compatibility, also try the modern Clipboard API
+      if (navigator.clipboard && window.ClipboardItem) {
+        // Strip center tags from plain text for clean copying
+        const plainTextForCopy = formattedText
+          .replace(/<center>/g, "")
+          .replace(/<\/center>/g, "");
+
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            "text/plain": new Blob([plainTextForCopy], { type: "text/plain" }),
+            "text/html": new Blob([docxCompatibleHtml], { type: "text/html" }),
+          }),
+        ]);
+      } else {
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = formattedText;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand("copy");
+        } catch (err) {
+          console.error("Fallback: Could not copy text: ", err);
+        }
+        document.body.removeChild(textArea);
+      }
+
+      toast({
+        title: "📋 Copied!",
+        description: "Formatted text (rich and plain) copied to clipboard",
+      });
+    } catch (error) {
+      console.error("Failed to copy rich text:", error);
+      toast({
+        title: "Error",
+        description: "Failed to copy rich text. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleClear = () => {
@@ -74,8 +208,8 @@ export default function DocumentFormatter() {
           <Image
             src="/images/DeWallify-Logo.png"
             alt="DeWallify Logo"
-            width={150}
-            height={150}
+            width={300}
+            height={300}
             className="mx-auto mb-4"
             priority
           />
@@ -158,11 +292,14 @@ export default function DocumentFormatter() {
 
             <div className="min-h-[300px] flex-1 rounded-3xl border-2 border-border bg-background p-4">
               {formattedText ? (
-                <div className="prose prose-sm max-w-none text-foreground">
-                  <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
-                    {formattedText}
-                  </pre>
-                </div>
+                <div
+                  className="prose prose-sm max-w-none text-foreground [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-4 [&_h1]:mt-6 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mb-3 [&_h2]:mt-5 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:mb-2 [&_h3]:mt-4 [&_p]:mb-3 [&_p]:leading-relaxed [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mb-3 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mb-3 [&_ol]:space-y-1 [&_li]:mb-1 [&_li]:leading-relaxed [&_strong]:font-bold [&_em]:italic [&_code]:bg-muted [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_code]:font-mono [&_pre]:bg-muted [&_pre]:p-3 [&_pre]:rounded-lg [&_pre]:text-sm [&_pre]:font-mono [&_pre]:overflow-x-auto [&_pre]:mb-3 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-3 [&_table]:min-w-full [&_table]:border-collapse [&_table]:mb-3 [&_th]:border [&_th]:border-border [&_th]:px-3 [&_th]:py-2 [&_th]:bg-muted [&_th]:font-semibold [&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2 [&_hr]:my-6 [&_hr]:border-t-2 [&_hr]:border-border"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(
+                      marked.parse(formattedText) as string
+                    ),
+                  }}
+                />
               ) : (
                 <div className="flex h-full items-center justify-center text-center">
                   <div className="space-y-2">

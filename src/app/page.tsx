@@ -24,6 +24,15 @@ export default function DocumentFormatter() {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
+  // Provider configuration - specify which AI provider to use
+  // The specific model for each provider is defined in the backend API route
+  // Available providers:
+  // - 'openai': Uses OpenAI models
+  // - 'google': Uses Google Gemini models
+  // - 'groq': Uses Groq models
+  // - 'cerebras': Uses Cerebras models
+  const PROVIDER = "groq"; // Options: 'openai', 'google', 'groq', 'cerebras'
+
   const handleFormat = async () => {
     if (!inputText.trim()) {
       setError("Please paste some text to format");
@@ -38,15 +47,56 @@ export default function DocumentFormatter() {
       const response = await fetch("/api/format", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: inputText }),
+        body: JSON.stringify({
+          text: inputText,
+          provider: PROVIDER,
+        }),
       });
 
       if (!response.ok) {
         throw new Error(`API responded with status: ${response.status}`);
       }
 
-      const data = await response.json();
-      setFormattedText(data.formatted);
+      // Handle streaming response
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (!reader) {
+        throw new Error("No response body reader available");
+      }
+
+      let accumulatedText = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+
+        // Try to parse each chunk as JSON
+        try {
+          const lines = chunk.split("\n").filter((line) => line.trim());
+
+          for (const line of lines) {
+            if (line.trim()) {
+              const data = JSON.parse(line);
+              if (data.chunk) {
+                accumulatedText += data.chunk;
+                setFormattedText(accumulatedText);
+              } else if (data.formatted) {
+                // Handle complete response format
+                setFormattedText(data.formatted);
+                accumulatedText = data.formatted;
+              }
+            }
+          }
+        } catch (parseError) {
+          // If JSON parsing fails, treat as raw text chunk
+          accumulatedText += chunk;
+          setFormattedText(accumulatedText);
+        }
+      }
     } catch (error) {
       setError("Oops! Something went wrong. Please try again.");
       console.error(error);

@@ -24,7 +24,8 @@ export async function POST(request: NextRequest) {
 
     let llm;
 
-    // Dynamically select the provider
+    // Dynamically select the provider and model
+    // Model selection is centralized here in the backend
     switch (provider) {
       case 'groq':
         const groq = createGroq({
@@ -124,23 +125,21 @@ Return ONLY the formatted Markdown, starting immediately with the content.`;
       messages: messages,
     });
 
-    // Respond with the stream, extracting the formatted text
+    // Respond with the stream, sending chunks as they arrive
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          let fullText = "";
           for await (const chunk of result.textStream) {
-            fullText += chunk;
+            // Send each chunk immediately as it arrives
+            controller.enqueue(
+              encoder.encode(
+                JSON.stringify({
+                  chunk: chunk,
+                }) + '\n',
+              ),
+            );
           }
-
-          controller.enqueue(
-            encoder.encode(
-              JSON.stringify({
-                formatted: fullText.trim(),
-              }),
-            ),
-          );
           controller.close();
         } catch (error) {
           console.error("Error processing stream:", error);
@@ -153,6 +152,8 @@ Return ONLY the formatted Markdown, starting immediately with the content.`;
       headers: {
         "Content-Type": "application/json",
         "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "Transfer-Encoding": "chunked",
       },
     });
 

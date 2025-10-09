@@ -121,9 +121,13 @@ export function useTextFormatting({ provider = "groq" }: UseTextFormattingProps 
 
         try {
             // Use marked and DOMPurify to create consistent and safe HTML for the clipboard
-            const htmlContent = DOMPurify.sanitize(
-                marked.parse(formattedText) as string
-            );
+            const rawHtml = marked.parse(formattedText) as string;
+            const styledHtmlContent = `
+                <div style="font-family: Arial, Verdana, 'Segoe UI', Tahoma, sans-serif; line-height: 1.6;">
+                    ${rawHtml}
+                </div>
+            `;
+            const htmlContent = DOMPurify.sanitize(styledHtmlContent);
 
             const clipboardItem = new ClipboardItem({
                 "text/plain": new Blob([formattedText], { type: "text/plain" }),

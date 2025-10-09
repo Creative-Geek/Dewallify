@@ -4,7 +4,6 @@ import { useTextFormatting } from "@/hooks/use-text-formatting";
 import { HeaderSection } from "@/components/formatter/header-section";
 import { ErrorMessage } from "@/components/formatter/error-message";
 import { TextEditorPanel } from "@/components/formatter/text-editor-panel";
-import { FormattingControls } from "@/components/formatter/formatting-controls";
 import { FeatureCards } from "@/components/formatter/feature-cards";
 import { useState } from "react";
 
@@ -44,6 +43,10 @@ export default function DocumentFormatter() {
             type="input"
             value={inputText}
             onChange={setInputText}
+            onFormat={formatText}
+            onClear={clearAll}
+            isFormatting={isFormatting}
+            isInputEmpty={!inputText.trim()}
           />
 
           {/* Output Panel */}
@@ -55,14 +58,6 @@ export default function DocumentFormatter() {
             isCopied={isCopied}
           />
         </div>
-
-        {/* Format Button */}
-        <FormattingControls
-          onFormat={formatText}
-          onClear={clearAll}
-          isFormatting={isFormatting}
-          isInputEmpty={!inputText.trim()}
-        />
 
         {/* Features */}
         <FeatureCards />

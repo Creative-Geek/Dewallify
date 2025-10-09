@@ -28,7 +28,7 @@ export default function DocumentFormatter() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FAF7F0] via-[#FFF8E8] to-[#F5E6D3] p-4 md:p-8">
+    <div className="min-h-screen bg-sky-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <HeaderSection />

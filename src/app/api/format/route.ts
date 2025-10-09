@@ -30,28 +30,29 @@ export async function POST(request: NextRequest) {
         const groq = createGroq({
           apiKey: process.env.GROQ_API_KEY,
         });
-        llm = groq('llama3-8b-8192');
+        llm = groq('moonshotai/kimi-k2-instruct-0905');
         break;
 
       case 'google':
         const google = createGoogleGenerativeAI({
           apiKey: process.env.GOOGLE_API_KEY, // Use GOOGLE_API_KEY for AI SDK Google provider
         });
-        llm = google('models/gemini-1.5-pro-latest');
+        llm = google('gemini-2.5-flash');
         break;
 
       case 'cerebras':
         const cerebras = createCerebras({
           apiKey: process.env.CEREBRAS_API_KEY,
         });
-        llm = cerebras('llama3.1-8b');
+        llm = cerebras('llama-4-maverick-17b-128e-instruct');
         break;
 
       default: // Default to OpenAI
         const openai = createOpenAI({
           apiKey: process.env.OPENAI_API_KEY,
+          baseURL: process.env.OPENAI_API_BASE,
         });
-        llm = openai('gpt-4o');
+        llm = openai('gpt-5-chat-latest:free');
         break;
     }
 

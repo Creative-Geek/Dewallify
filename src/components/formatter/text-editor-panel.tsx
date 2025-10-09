@@ -33,7 +33,7 @@ export function TextEditorPanel({
 
   if (isInput) {
     return (
-      <Card className="flex flex-col gap-4 rounded-[2rem] border-2 border-border bg-card p-6 shadow-sm">
+      <Card className="flex flex-col h-full gap-4 rounded-[2rem] border-2 border-border bg-card p-6 shadow-sm">
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-secondary p-2">
             <FileText className="h-5 w-5 text-secondary-foreground" />
@@ -48,7 +48,7 @@ export function TextEditorPanel({
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           placeholder="Paste your unformatted text here... It can be notes, emails, articles, or any wall of text that needs structure."
-          className="min-h-[300px] resize-none rounded-3xl border-2 border-border bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-primary"
+          className="flex-1 min-h-[300px] resize-none rounded-3xl border-2 border-border bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-primary"
         />
 
         <div className="flex gap-3">

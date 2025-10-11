@@ -1,3 +1,5 @@
+// This is the main page of the DeWallify application. It serves as the primary user interface for the text formatting functionality.
+
 "use client";
 
 import { useTextFormatting } from "@/hooks/use-text-formatting";

@@ -1,3 +1,5 @@
+// This file configures ESLint for the project, extending Next.js's recommended rules and specifying ignored files.
+
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";

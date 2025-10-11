@@ -1,3 +1,5 @@
+// This component renders a set of feature cards that highlight the key functionalities of the application.
+
 import { Card } from "@/components/ui/card";
 import { Sparkles, FileText, Copy } from "lucide-react";
 

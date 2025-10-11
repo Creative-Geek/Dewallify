@@ -1,3 +1,5 @@
+// This API route handles text formatting requests. It receives text and a provider, then uses the selected AI provider to format the text as Markdown based on a detailed system instruction. It streams the formatted text back to the client.
+
 import { createOpenAI } from '@ai-sdk/openai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createGroq } from '@ai-sdk/groq';
@@ -76,7 +78,9 @@ export async function POST(request: NextRequest) {
 ### Emphasis
 - **Bold** for key terms and important concepts
 - *Italic* for subtle emphasis
-- \`code\` for technical terms, filenames, commands
+- 
+code
+ for technical terms, filenames, commands
 - Use strategically - don't over-format
 
 ### Special Elements

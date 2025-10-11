@@ -1,3 +1,5 @@
+// This component renders the main header section of the application, including the logo, title, and a brief description.
+
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
 

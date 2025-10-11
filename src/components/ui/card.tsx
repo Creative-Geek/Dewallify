@@ -1,3 +1,5 @@
+// This file provides a set of modular and reusable components for building styled cards, including headers, titles, content, and footers.
+
 import * as React from "react";
 
 import { cn } from "@/lib/utils";

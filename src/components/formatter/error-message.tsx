@@ -1,3 +1,5 @@
+// This component renders a styled error message card with an alert icon.
+
 import { AlertCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 

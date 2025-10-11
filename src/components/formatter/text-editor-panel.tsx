@@ -1,3 +1,5 @@
+// This component renders a text editor panel that can be configured as either an input for raw text or an output for formatted text. It handles user input, displays formatted content, and provides controls for formatting, clearing, and copying text.
+
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Sparkles, FileText, Wand2 } from "lucide-react";

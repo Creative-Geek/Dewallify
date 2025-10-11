@@ -1,3 +1,5 @@
+// This file implements a custom hook (useToast) and a function (toast) for managing and displaying toast notifications, inspired by react-hot-toast.
+
 'use client'
 
 // Inspired by react-hot-toast library

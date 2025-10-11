@@ -1,3 +1,5 @@
+// This component provides a customized toast notification system for the application, built on top of the 'sonner' library.
+
 "use client";
 
 import { Toaster as Sonner, ToasterProps } from "sonner";

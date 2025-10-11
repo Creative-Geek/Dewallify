@@ -1,3 +1,5 @@
+// This custom hook encapsulates the core logic for text formatting, including state management, API communication, and user actions like copying and clearing text.
+
 import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import DOMPurify from "dompurify";

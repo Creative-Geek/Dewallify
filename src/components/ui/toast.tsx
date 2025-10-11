@@ -1,3 +1,5 @@
+// This file provides a set of components for creating and displaying toast notifications, built on top of @radix-ui/react-toast.
+
 "use client";
 
 import * as React from "react";

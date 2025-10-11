@@ -1,3 +1,5 @@
+// This component renders the toast notifications that are managed by the useToast hook. It displays the toasts and the viewport where they appear.
+
 "use client";
 
 import { useToast } from "@/hooks/use-toast";

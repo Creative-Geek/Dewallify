@@ -1,3 +1,5 @@
+/* This file defines the global CSS styles and theme for the application. It includes color palettes for light and dark modes, custom variants, and base styles using Tailwind CSS. */
+
 @import "tailwindcss";
 @import "tw-animate-css";
 

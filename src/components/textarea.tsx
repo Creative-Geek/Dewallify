@@ -1,3 +1,5 @@
+// This component provides a reusable, styled textarea element for the application, built on top of the native HTML textarea.
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

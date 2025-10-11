@@ -1,3 +1,5 @@
+// This component provides the primary user controls for text formatting, including the 'Format with AI' and 'Clear All' buttons.
+
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 

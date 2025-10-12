@@ -24,7 +24,7 @@ export function HeaderSection() {
           AI Powered
         </span>
       </div>
-      <h1 className="mb-3 text-balance text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+      <h1 className="mr-3 ml-3 mb-3 text-balance text-4xl font-bold tracking-tight text-foreground md:text-5xl">
         Document Formatter
       </h1>
       <p className="text-pretty text-lg text-muted-foreground">

@@ -81,7 +81,7 @@ export function TextEditorPanel({
           <Button
             onClick={onFormat}
             disabled={isFormatting || isInputEmpty}
-            className="w-full md:flex-1 rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+            className="w-full md:flex-1 rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 transition-all duration-300"
             size="lg"
           >
             {isFormatting ? (
@@ -101,7 +101,9 @@ export function TextEditorPanel({
           <div className="flex w-full md:w-auto items-center justify-between md:justify-start gap-3">
             {/* Mode Switcher */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Mode:</span>
+              <span className="text-sm text-muted-foreground md:block hidden">
+                Mode:
+              </span>
               <div className="inline-flex rounded-full overflow-hidden border-1">
                 {PROVIDER_MODES.map(({ id, label }) => {
                   const isActive = provider === id;
@@ -112,8 +114,8 @@ export function TextEditorPanel({
                       onClick={() => onProviderChange?.(id)}
                       className={`px-3 py-2 text-sm ${
                         isActive
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-background text-foreground hover:bg-muted"
+                          ? "bg-primary text-primary-foreground transition-all duration-300"
+                          : "bg-background text-foreground hover:bg-muted transition-all duration-300"
                       }`}
                       aria-pressed={isActive}
                     >
@@ -128,7 +130,7 @@ export function TextEditorPanel({
             <Button
               onClick={onClear}
               variant="outline"
-              className="rounded-full border-2 border-border bg-background text-foreground hover:bg-muted"
+              className="rounded-full border-2 border-border bg-background text-foreground hover:bg-muted transition-all duration-300"
               size="lg"
             >
               Clear
@@ -159,7 +161,7 @@ export function TextEditorPanel({
         {value && onCopy && (
           <button
             onClick={onCopy}
-            className="rounded-full bg-secondary transition-all text-secondary-foreground hover:bg-secondary/90 px-3 py-2 text-sm flex items-center font-semibold"
+            className="rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/80 px-3 py-2 text-sm flex items-center font-semibold transition-all duration-300"
           >
             {isCopied ? (
               <>

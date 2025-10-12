@@ -6,7 +6,7 @@ import { createGroq } from '@ai-sdk/groq';
 import { createCerebras } from '@ai-sdk/cerebras';
 import { streamText, CoreMessage } from 'ai';
 import { NextRequest, NextResponse } from "next/server";
-import { HarmBlockThreshold, HarmCategory } from "@google/genai"; // Keep for safety settings enum
+import { systemInstruction } from "@/lib/system-instruction";
 
 export const maxDuration = 30;
 
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
       case 'google':
         const google = createGoogleGenerativeAI({
-          apiKey: process.env.GEMINI_API_KEY, // Use GOOGLE_API_KEY for AI SDK Google provider
+          apiKey: process.env.GEMINI_API_KEY,
         });
         llm = google('gemini-2.5-flash');
         break;
@@ -59,70 +59,11 @@ export async function POST(request: NextRequest) {
         break;
     }
 
-    const systemInstruction = `You are a text formatter that transforms unformatted text into clean, readable Markdown. Your goal is to enhance structure and readability while preserving all original content exactly.
-
-## Core Rules:
-1. **Preserve everything** - Never remove, summarize, or paraphrase any content
-2. **Output only Markdown** - No preambles, explanations, or meta-commentary
-3. **Structure intelligently** - Add headings, lists, emphasis where they improve readability
-4. **Be consistent** - Apply formatting uniformly throughout
-
-## Key Formatting Decisions:
-
-### Structure
-- Create clear heading hierarchy (#, ##, ###) for logical sections
-- Break long paragraphs into digestible chunks (3-5 sentences)
-- Convert series of items into lists (- or 1.)
-- Use blank lines to separate elements properly
-
-### Emphasis
-- **Bold** for key terms and important concepts
-- *Italic* for subtle emphasis
-- 
-code
- for technical terms, filenames, commands
-- Use strategically - don't over-format
-
-### Special Elements
-- Use blockquotes (>) for important callouts or quotes
-- Use tables (| pipes |) when data is clearly tabular
-- Use horizontal rules (---) sparingly to separate major sections
-- Use <center></center> tags to center titles or important text when appropriate
-- When using inline HTML, like the <center> tag, make sure to wrap the markdown text with blank lines before and after:
-<center>
-[blank line]
-# Title
-[blank line]
-</center>
-
-## What NOT to Do:
-- Don't add content that wasn't there unless explicitly instructed, that includes adding a title without the user instruction "[add a title]"
-- Don't remove any information
-- Don't add introductions like "Here's your formatted text:"
-- Don't over-structure simple text
-- Don't force formatting where it doesn't fit
-
-## Edge Cases:
-- If text is already formatted, make minimal changes
-- If text is very short, don't force unnecessary structure
-- Respect creative writing style and line breaks
-- Preserve code blocks and special characters
-- User may provide additional instructions in [] like [what is the meaning of life?], you should replace those parts with their corresponding answer.
-
-Return ONLY the formatted Markdown, starting immediately with the content.`;
-
     // Construct messages for the AI SDK
     const messages: CoreMessage[] = [
       { role: 'system', content: systemInstruction },
       { role: 'user', content: text },
     ];
-
-    // Note: AI SDK's streamText does not directly support safetySettings in the same way
-    // as GoogleGenAI's generateContentStream. Safety settings would typically be configured
-    // at the model provider level or handled by the model itself.
-    // For Google models, the AI SDK's createGoogleGenerativeAI might have its own way
-    // of handling safety, or it might rely on default API settings.
-    // For now, we'll omit the explicit safetySettings from the streamText call.
 
     const result = streamText({
       model: llm,

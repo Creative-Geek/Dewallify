@@ -75,11 +75,13 @@ export function TextEditorPanel({
           dir="auto"
         />
 
-        <div className="flex gap-3 items-center">
+        {/* Responsive control layout */}
+        <div className="flex flex-col md:flex-row gap-3 items-center">
+          {/* Row 1: Format button full-width on mobile */}
           <Button
             onClick={onFormat}
             disabled={isFormatting || isInputEmpty}
-            className="flex-1 rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+            className="w-full md:flex-1 rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
             size="lg"
           >
             {isFormatting ? (
@@ -95,39 +97,43 @@ export function TextEditorPanel({
             )}
           </Button>
 
-          {/* Mode Switcher: Speed (cerebras) | Quality (gemini) */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Mode:</span>
-            <div className="inline-flex rounded-full overflow-hidden border-1">
-              {PROVIDER_MODES.map(({ id, label }) => {
-                const isActive = provider === id;
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => onProviderChange?.(id)}
-                    className={`px-3 py-2 text-sm ${
-                      isActive
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-background text-foreground hover:bg-muted"
-                    }`}
-                    aria-pressed={isActive}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
+          {/* Row 2 on mobile, same line on desktop */}
+          <div className="flex w-full md:w-auto items-center justify-between md:justify-start gap-3">
+            {/* Mode Switcher */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Mode:</span>
+              <div className="inline-flex rounded-full overflow-hidden border-1">
+                {PROVIDER_MODES.map(({ id, label }) => {
+                  const isActive = provider === id;
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => onProviderChange?.(id)}
+                      className={`px-3 py-2 text-sm ${
+                        isActive
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-background text-foreground hover:bg-muted"
+                      }`}
+                      aria-pressed={isActive}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
-          <Button
-            onClick={onClear}
-            variant="outline"
-            className="rounded-full border-2 border-border bg-background text-foreground hover:bg-muted"
-            size="lg"
-          >
-            Clear
-          </Button>
+            {/* Clear button */}
+            <Button
+              onClick={onClear}
+              variant="outline"
+              className="rounded-full border-2 border-border bg-background text-foreground hover:bg-muted"
+              size="lg"
+            >
+              Clear
+            </Button>
+          </div>
         </div>
       </Card>
     );

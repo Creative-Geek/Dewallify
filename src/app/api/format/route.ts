@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
       case 'google':
         const google = createGoogleGenerativeAI({
-          apiKey: process.env.GOOGLE_API_KEY, // Use GOOGLE_API_KEY for AI SDK Google provider
+          apiKey: process.env.GEMINI_API_KEY, // Use GOOGLE_API_KEY for AI SDK Google provider
         });
         llm = google('gemini-2.5-flash');
         break;
@@ -96,7 +96,7 @@ code
 </center>
 
 ## What NOT to Do:
-- Don't add content that wasn't there
+- Don't add content that wasn't there unless explicitly instructed, that includes adding a title without the user instruction "[add a title]"
 - Don't remove any information
 - Don't add introductions like "Here's your formatted text:"
 - Don't over-structure simple text

@@ -9,7 +9,7 @@ interface UseTextFormattingProps {
     provider?: string;
 }
 
-export function useTextFormatting({ provider = "groq" }: UseTextFormattingProps = {}) {
+export function useTextFormatting({ provider = "cerebras" }: UseTextFormattingProps = {}) {
     const [inputText, setInputText] = useState("");
     const [formattedText, setFormattedText] = useState("");
     const [isFormatting, setIsFormatting] = useState(false);

@@ -37,6 +37,9 @@ export function useTextFormatting({ provider = "groq" }: UseTextFormattingProps 
             });
 
             if (!response.ok) {
+                if (response.status === 429) {
+                    throw new Error("Rate limit exceeded. Please wait a moment before trying again.");
+                }
                 throw new Error(`API responded with status: ${response.status}`);
             }
 
@@ -111,7 +114,8 @@ export function useTextFormatting({ provider = "groq" }: UseTextFormattingProps 
                 }
             }
         } catch (error) {
-            setError("Oops! Something went wrong. Please try again.");
+            const errorMessage = error instanceof Error ? error.message : "Oops! Something went wrong. Please try again.";
+            setError(errorMessage);
             console.error(error);
         } finally {
             setIsFormatting(false);

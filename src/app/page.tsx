@@ -8,6 +8,7 @@ import { ErrorMessage } from "@/components/formatter/error-message";
 import { TextEditorPanel } from "@/components/formatter/text-editor-panel";
 import { FeatureCards } from "@/components/formatter/feature-cards";
 import { useState } from "react";
+import { Github } from "lucide-react";
 
 export default function DocumentFormatter() {
   const {
@@ -19,6 +20,8 @@ export default function DocumentFormatter() {
     formatText,
     copyToClipboard,
     clearAll,
+    provider,
+    setProvider,
   } = useTextFormatting();
 
   const [isCopied, setIsCopied] = useState(false);
@@ -39,7 +42,7 @@ export default function DocumentFormatter() {
         {error && <ErrorMessage message={error} />}
 
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid [@media(min-width:1090px)]:grid-cols-2 gap-6 mb-8">
           {/* Input Panel */}
           <TextEditorPanel
             type="input"
@@ -49,6 +52,8 @@ export default function DocumentFormatter() {
             onClear={clearAll}
             isFormatting={isFormatting}
             isInputEmpty={!inputText.trim()}
+            provider={provider}
+            onProviderChange={(p) => setProvider(p)}
           />
 
           {/* Output Panel */}
@@ -63,6 +68,24 @@ export default function DocumentFormatter() {
 
         {/* Features */}
         <FeatureCards />
+        {/* Footer */}
+        <div className="text-center text-sm text-muted-foreground mt-12 mb-4">
+          &copy; {new Date().getFullYear()} DeWallify. All rights reserved.
+          <br />
+          Built with ❤️ using Next.js and Tailwind CSS.
+        </div>
+        {/*GitHub icon and link */}
+        <div className="text-center">
+          <a
+            href="https://github.com/Creative-Geek/Dewallify"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground hover:text-primary"
+          >
+            <Github className="inline-block h-4 w-4 mr-1" />
+            GitHub
+          </a>
+        </div>
       </div>
     </div>
   );

@@ -6,14 +6,15 @@ import DOMPurify from "dompurify";
 import { marked } from "marked";
 
 interface UseTextFormattingProps {
-    provider?: string;
+    provider?: string; // initial provider; defaults to 'cerebras' (Speed)
 }
 
-export function useTextFormatting({ provider = "cerebras" }: UseTextFormattingProps = {}) {
+export function useTextFormatting({ provider: initialProvider = "cerebras" }: UseTextFormattingProps = {}) {
     const [inputText, setInputText] = useState("");
     const [formattedText, setFormattedText] = useState("");
     const [isFormatting, setIsFormatting] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [provider, setProvider] = useState<string>(initialProvider);
     const { toast } = useToast();
 
     const formatText = useCallback(async () => {
@@ -129,7 +130,7 @@ export function useTextFormatting({ provider = "cerebras" }: UseTextFormattingPr
             // Use marked and DOMPurify to create consistent and safe HTML for the clipboard
             const rawHtml = marked.parse(formattedText) as string;
             const styledHtmlContent = `
-                <div style="font-family: Arial, Verdana, 'Segoe UI', Tahoma, sans-serif; line-height: 1.6;">
+                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6;">
                     ${rawHtml}
                 </div>
             `;
@@ -168,6 +169,8 @@ export function useTextFormatting({ provider = "cerebras" }: UseTextFormattingPr
         formattedText,
         isFormatting,
         error,
+        provider,
+        setProvider,
 
         // Actions
         formatText,

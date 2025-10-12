@@ -1,188 +1,107 @@
-# DeWallify 🚀
+# DeWallify
 
-A free, web-based utility that takes a plain "wall of text" and uses AI to automatically format it with Markdown for improved readability. Transform your unstructured text into beautifully formatted, document-ready content.
+<div align="center">
+  <a href="https://github.com/Creative-Geek/DeWallify">
+    <img src="images/DeWallify-Logo.png" alt="Logo" width="300" height="300">
+  </a>
 
-## Features ✨
+  <h3 align="center">DeWallify</h3>
 
-- **AI-Powered Formatting**: Uses Google Gemini AI to intelligently structure your text
-- **Markdown Output**: Clean, readable Markdown with proper headings, lists, and emphasis
-- **Rich Text Copy**: Copy as both plain text (Markdown) and rich text for Word/Docs
-- **Real-time Processing**: Fast formatting with streaming responses
-- **No Registration**: Free to use, no login required
-- **Professional Design**: Beautiful, paper-like UI with rounded buttons and pale colors
+  <p align="center">
+    Effortlessly convert walls of text into clean, readable Markdown.
+    <br />
+    <a href="https://dewallify.creative-geek.tech"><strong>Try it »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/Creative-Geek/DeWallify/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/Creative-Geek/DeWallify/issues">Request Feature</a>
+  </p>
+</div>
 
-## Getting Started 🛠️
+<div align="center">
+
+![Stars](https://img.shields.io/github/stars/Creative-Geek/DeWallify)
+![Issues](https://img.shields.io/github/issues/Creative-Geek/DeWallify)
+
+</div>
+
+![App Screenshot](images/screenshot.png)
+
+## Key Features
+
+- **AI-Powered Formatting**: Automatically transforms unstructured text into well-formatted Markdown.
+- **Multiple AI Providers**: Choose from a variety of AI models, including OpenAI, Groq, and Google Gemini.
+- **Speed vs Quality switcher**: Toggle between Speed (Cerebras) and Quality (Gemini) directly next to the Format button.
+- **Real-Time Streaming**: Watch the formatted text appear in real-time as the AI processes it.
+- **Clipboard Integration**: Easily copy the formatted Markdown to your clipboard with a single click.
+- **Clean & Modern UI**: A simple, intuitive interface built with Next.js and Shadcn UI.
+- **Easy to Customize**: Modify the AI's formatting behavior by editing a single system prompt file.
+
+## Getting Started
+
+Follow these steps to set up the project locally.
 
 ### Prerequisites
 
-- Node.js 18+ 
-- pnpm (recommended) or npm
-- Google Gemini API key
+Make sure you have [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/) installed.
 
 ### Installation
 
 1. **Clone the repository:**
+
    ```bash
-   git clone <repository-url>
-   cd dewallify
+   git clone https://github.com/Creative-Geek/DeWallify.git
+   cd DeWallify
    ```
 
 2. **Install dependencies:**
+
    ```bash
    pnpm install
    ```
 
 3. **Set up environment variables:**
-   ```bash
-   cp .env.example .env.local
-   ```
 
-4. **Add your Google Gemini API key:**
-   
-   Edit `.env.local` and replace `your_gemini_api_key_here` with your actual API key:
+   Create a `.env.local` file in the root of the project and add your AI provider API keys:
+
    ```env
-   GEMINI_API_KEY=your_actual_gemini_api_key_here
+   OPENAI_API_KEY=...
+   GROQ_API_KEY=...
+   GEMINI_API_KEY=...
+   CEREBRAS_API_KEY=...
    ```
 
-   **Get your API key from:** [Google AI Studio](https://makersuite.google.com/app/apikey)
+4. **Run the development server:**
 
-5. **Run the development server:**
    ```bash
    pnpm dev
    ```
 
-6. **Open your browser:**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-### Build for Production
+After pasting the formatted text into Microsoft Word, it retains its structure and readability.
 
-```bash
-pnpm build
-pnpm start
-```
+![MS Word Screenshot](images/msword.png)
 
-## How It Works 🧠
+## Tech Stack
 
-1. **Input**: User pastes plain text into the input textarea
-2. **Processing**: Frontend sends text to `/api/format` endpoint
-3. **AI Formatting**: Google Gemini AI processes the text with a detailed prompt
-4. **Output**: Formatted Markdown is returned and rendered with syntax highlighting
-5. **Copy**: Users can copy both plain Markdown and rich HTML for pasting into documents
+- **Framework**: [Next.js](https://nextjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components**: [Shadcn UI](https://ui.shadcn.com/)
+- **AI Integration**: [Vercel AI SDK](https://sdk.vercel.ai/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
 
-## Tech Stack 💻
+## Contributing
 
-- **Frontend**: Next.js 15, React 19, TypeScript
-- **Styling**: Tailwind CSS v4, Shadcn/ui components
-- **AI**: Google Gemini (gemini-1.5-flash)
-- **UI Components**: Radix UI primitives
-- **Notifications**: Sonner (toast notifications)
-- **Markdown**: react-markdown for rendering
-- **Icons**: Lucide React
+Contributions are welcome! Please open an issue to discuss your ideas or submit a pull request.
 
-## API Endpoints 📡
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### POST /api/format
+## License
 
-Formats plain text using Google Gemini AI.
-
-**Request Body:**
-```json
-{
-  "text": "Your unformatted text here..."
-}
-```
-
-**Response:**
-```json
-{
-  "formatted": "# Formatted Text\n\nYour formatted markdown..."
-}
-```
-
-## Environment Variables 🔐
-
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `GEMINI_API_KEY` | Google Gemini API key | Yes | - |
-| `NEXT_PUBLIC_APP_URL` | Application URL | No | `http://localhost:3000` |
-
-## Styling & Design 🎨
-
-The application features a unique "paper-like" design with:
-- Warm, papery background gradients
-- Rounded buttons and components  
-- Pale, colorful palette (no pure black/white)
-- Hand-drawn style icons using Lucide React
-- Soft shadows and backdrop blur effects
-
-### Color Palette
-- **Paper Cream**: `#FAF7F0`
-- **Warm Taupe**: `#6B5B4F` 
-- **Soft Coral**: `#FFB4A2`
-- **Pale Mint**: `#B5EAD7`
-- **Soft Lavender**: `#E0BBE4`
-
-## Development 👩‍💻
-
-### Project Structure
-```
-dewallify/
-├── src/
-│   ├── app/
-│   │   ├── api/format/route.ts    # Gemini AI API endpoint
-│   │   ├── globals.css            # Global styles
-│   │   ├── layout.tsx             # Root layout with toast
-│   │   └── page.tsx               # Main formatter page
-│   ├── components/
-│   │   └── ui/                    # Shadcn/ui components
-│   └── lib/
-│       └── utils.ts               # Utility functions
-├── .env.example                   # Environment template
-├── .env.local                     # Local environment (gitignored)
-└── package.json
-```
-
-### Scripts
-- `pnpm dev` - Start development server
-- `pnpm build` - Build for production
-- `pnpm start` - Start production server
-- `pnpm lint` - Run ESLint
-
-## Contributing 🤝
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a pull request
-
-## License 📄
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Troubleshooting 🔧
-
-### Common Issues
-
-**"API key not configured" error:**
-- Make sure you've set `GEMINI_API_KEY` in your `.env.local` file
-- Verify your API key is valid at [Google AI Studio](https://makersuite.google.com/app/apikey)
-
-**Build errors:**
-- Clear node_modules and reinstall: `rm -rf node_modules pnpm-lock.yaml && pnpm install`
-- Make sure you're using Node.js 18 or higher
-
-**Styling issues:**
-- The app uses Tailwind CSS v4 - make sure you're not mixing v3 classes
-- Custom CSS variables are defined in `globals.css`
-
-## Support 💬
-
-If you encounter any issues or have questions:
-1. Check the [Issues](../../issues) section
-2. Create a new issue with detailed description
-3. Include your environment details and error messages
-
----
-
-Made with ❤️ using Next.js and Google Gemini AI
+Distributed under the MIT License. See `LICENSE` for more information.

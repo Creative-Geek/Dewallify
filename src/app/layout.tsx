@@ -1,19 +1,10 @@
 // This is the root layout for the application. It sets up the HTML structure, includes global styles, defines metadata, and configures fonts.
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import { Toaster } from "@/components/ui/toaster"; // Updated import
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "DeWallify - Transform Your Text with AI",
@@ -47,7 +38,7 @@ export default function RootLayout({
         <link rel="icon" href="/images/DeWallify-Logo.png" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
       >
         {children}
         <Toaster /> {/* Toaster component from designandstyling */}

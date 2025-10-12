@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'google':
+      case 'gemini': // alias for Google Gemini
         const google = createGoogleGenerativeAI({
           apiKey: process.env.GEMINI_API_KEY,
         });

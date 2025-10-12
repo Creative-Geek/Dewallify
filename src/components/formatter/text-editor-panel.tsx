@@ -6,6 +6,22 @@ import { Sparkles, FileText, Wand2, Copy, Check } from "lucide-react";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
 import { Button } from "@/components/ui/button";
+import { PROVIDER_MODES, type ProviderId } from "@/lib/providers";
+import { Ubuntu } from "next/font/google";
+
+// Load Ubuntu font with broad language support and common weights
+const ubuntu = Ubuntu({
+  subsets: [
+    "latin",
+    "latin-ext",
+    "cyrillic",
+    "cyrillic-ext",
+    "greek",
+    "greek-ext",
+  ],
+  weight: ["300", "400", "500", "700"],
+  display: "swap",
+});
 
 interface TextEditorPanelProps {
   type: "input" | "output";
@@ -17,8 +33,8 @@ interface TextEditorPanelProps {
   onFormat?: () => void;
   onClear?: () => void;
   isInputEmpty?: boolean;
-  provider?: string;
-  onProviderChange?: (provider: "cerebras" | "gemini") => void;
+  provider?: ProviderId;
+  onProviderChange?: (provider: ProviderId) => void;
 }
 
 export function TextEditorPanel({
@@ -38,7 +54,9 @@ export function TextEditorPanel({
 
   if (isInput) {
     return (
-      <Card className="flex flex-col h-full gap-4 rounded-[2rem] border-2 border-border bg-card p-6 shadow-sm">
+      <Card
+        className={`${ubuntu.className} flex flex-col h-full gap-4 rounded-[2rem] border-2 border-border bg-card p-6 shadow-sm`}
+      >
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-secondary p-2">
             <FileText className="h-5 w-5 text-secondary-foreground" />
@@ -81,30 +99,24 @@ export function TextEditorPanel({
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Mode:</span>
             <div className="inline-flex rounded-full overflow-hidden border-1">
-              <button
-                type="button"
-                onClick={() => onProviderChange?.("cerebras")}
-                className={`px-3 py-2 text-sm ${
-                  provider === "cerebras"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-background text-foreground hover:bg-muted"
-                }`}
-                aria-pressed={provider === "cerebras"}
-              >
-                Speed
-              </button>
-              <button
-                type="button"
-                onClick={() => onProviderChange?.("gemini")}
-                className={`px-3 py-2 text-sm ${
-                  provider === "gemini"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-background text-foreground hover:bg-muted"
-                }`}
-                aria-pressed={provider === "gemini"}
-              >
-                Quality
-              </button>
+              {PROVIDER_MODES.map(({ id, label }) => {
+                const isActive = provider === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => onProviderChange?.(id)}
+                    className={`px-3 py-2 text-sm ${
+                      isActive
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-background text-foreground hover:bg-muted"
+                    }`}
+                    aria-pressed={isActive}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -123,7 +135,9 @@ export function TextEditorPanel({
 
   // Output Panel
   return (
-    <Card className="h-full bg-white/80 border-2 rounded-3xl p-6 shadow-lg">
+    <Card
+      className={`${ubuntu.className} h-full bg-white/80 border-2 rounded-3xl p-6 shadow-lg`}
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="rounded-full bg-accent p-2">

@@ -4,17 +4,18 @@ import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
+import { DEFAULT_PROVIDER, type ProviderId } from "@/lib/providers";
 
 interface UseTextFormattingProps {
-    provider?: string; // initial provider; defaults to 'cerebras' (Speed)
+    provider?: ProviderId; // initial provider; defaults to 'cerebras' (Speed)
 }
 
-export function useTextFormatting({ provider: initialProvider = "cerebras" }: UseTextFormattingProps = {}) {
+export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER }: UseTextFormattingProps = {}) {
     const [inputText, setInputText] = useState("");
     const [formattedText, setFormattedText] = useState("");
     const [isFormatting, setIsFormatting] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [provider, setProvider] = useState<string>(initialProvider);
+    const [provider, setProvider] = useState<ProviderId>(initialProvider);
     const { toast } = useToast();
 
     const formatText = useCallback(async () => {

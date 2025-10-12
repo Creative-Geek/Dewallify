@@ -72,7 +72,7 @@ export default function DocumentFormatter() {
         <div className="text-center text-sm text-muted-foreground mt-12 mb-4">
           &copy; {new Date().getFullYear()} DeWallify. All rights reserved.
           <br />
-          Built with ❤️ using Next.js and Tailwind CSS.
+          Built with ❤️ By The Creative Geek
         </div>
         {/*GitHub icon and link */}
         <div className="text-center">

@@ -8,24 +8,26 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://dewallify.creative-geek.tech"),
-  title: "DeWallify - AI-Powered Text & Markdown Formatter",
+  title: "DeWallify - Instant Report & Essay Formatter for Word/Docs",
   description:
-    "A free, web-based utility that takes plain text and uses AI to automatically format it with Markdown for improved readability. Copy as rich text for Word, Docs, or anywhere.",
+    "Tired of messy text? DeWallify is a free AI tool for students to instantly format reports, essays, and notes. Paste your text, and copy clean, professional formatting directly into Word or Google Docs.",
   keywords: [
-    "text formatter",
-    "markdown",
-    "AI",
+    "report formatter",
+    "essay formatting",
+    "text formatter for students",
+    "format text for Word",
     "document formatting",
-    "text formatting",
-    "wall of text",
-    "copy as markdown",
-    "rich text",
+    "AI text formatting",
+    "free student tools",
+    "copy and paste formatting",
+    "academic writing",
+    "report writing",
   ],
   authors: [{ name: "DeWallify" }],
   openGraph: {
-    title: "DeWallify - AI-Powered Text & Markdown Formatter",
+    title: "DeWallify - Instant Report & Essay Formatter",
     description:
-      "Transform walls of text into beautifully formatted, readable content with AI.",
+      "Transform messy notes into perfectly formatted reports and essays for Word or Google Docs with one click. Free and AI-powered.",
     url: "https://dewallify.creative-geek.tech",
     type: "website",
     images: [
@@ -41,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "DeWallify - AI-Powered Text & Markdown Formatter",
     description:
-      "Transform walls of text into beautifully formatted, readable content with AI.",
+      "Transform walls of text into beautifully formatted, readable content.",
     images: ["/images/DeWallify-Logo.png"],
   },
   icons: {

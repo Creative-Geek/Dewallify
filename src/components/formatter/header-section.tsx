@@ -25,11 +25,11 @@ export function HeaderSection() {
         </span>
       </div>
       <h1 className="mr-3 ml-3 mb-3 text-balance text-4xl font-bold tracking-tight text-foreground md:text-5xl">
-        Document Formatter
+        Format Your Report Instantly
       </h1>
       <p className="text-pretty text-lg text-muted-foreground">
-        Paste your plaintext and let AI transform it into beautifully formatted
-        content
+        Paste your messy notes or draft, and let our AI create a beautifully
+        formatted report for you.
       </p>
     </div>
   );

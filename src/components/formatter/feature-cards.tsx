@@ -24,15 +24,16 @@ export function FeatureCards() {
         />
       ),
       title: "Professional Output",
-      description: "Get document-ready formatted text instantly",
+      description: "Get a perfectly structured report for Word or Google Docs.",
       bgColor: "bg-secondary",
     },
     {
       icon: (
         <Copy className="h-6 w-6 text-accent-foreground" strokeWidth={1.5} />
       ),
-      title: "Easy Copy",
-      description: "One-click copy to use anywhere you need",
+      title: "One-Click Copy",
+      description:
+        "Copy the formatted text and paste it directly into your document.",
       bgColor: "bg-accent",
     },
   ];

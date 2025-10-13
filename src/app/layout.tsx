@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/toaster"; // Updated import
 import "./globals.css";
 
@@ -68,6 +69,7 @@ export default function RootLayout({
       >
         {children}
         <Toaster /> {/* Toaster component from designandstyling */}
+        <Analytics />
       </body>
     </html>
   );

@@ -73,6 +73,7 @@ export function TextEditorPanel({
           placeholder="Paste your unformatted text here... It can be notes, emails, articles, or any wall of text that needs structure."
           className="flex-1 min-h-[300px] resize-none rounded-3xl border-2 border-border bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-primary"
           dir="auto"
+          maxLength={8000}
         />
 
         {/* Responsive control layout */}

@@ -63,6 +63,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/images/DeWallify-Logo.png" />
+        <script async src="https://tally.so/widgets/embed.js"></script>
       </head>
       <body
         className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}

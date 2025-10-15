@@ -85,6 +85,13 @@ export default function DocumentFormatter() {
             <Github className="inline-block h-4 w-4 mr-1" />
             GitHub
           </a>
+          <span className="mx-2 text-muted-foreground">•</span>
+          <button
+            data-tally-open="n0pJPB"
+            className="text-muted-foreground hover:text-primary"
+          >
+            Suggest A Feature Or Report A Problem
+          </button>
         </div>
       </div>
     </div>

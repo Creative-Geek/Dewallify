@@ -9,7 +9,7 @@ interface ErrorMessageProps {
 
 export function ErrorMessage({ message }: ErrorMessageProps) {
   return (
-    <div className="max-w-2xl mx-auto mb-4">
+    <div className="max-w-2xl mx-auto mb-4 animate-shake">
       <Card className="bg-red-50 border-2 border-red-200 p-4 rounded-3xl">
         <div className="flex items-center gap-2 text-red-700">
           <AlertCircle className="w-5 h-5" />

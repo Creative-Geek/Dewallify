@@ -12,10 +12,10 @@ export function HeaderSection() {
         alt="DeWallify Logo"
         width={300}
         height={300}
-        className="mx-auto mb-4"
+        className="mx-auto mb-4 animate-fadeInScale"
         priority
       />
-      <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2">
+      <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 animate-slideInDown">
         <Sparkles
           className="h-4 w-4 text-primary-foreground"
           strokeWidth={1.5}
@@ -24,10 +24,10 @@ export function HeaderSection() {
           AI Powered
         </span>
       </div>
-      <h1 className="mr-3 ml-3 mb-3 text-balance text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+      <h1 className="mr-3 ml-3 mb-3 text-balance text-4xl font-bold tracking-tight text-foreground md:text-5xl animate-slideInUp stagger-1">
         Format Your Report Instantly
       </h1>
-      <p className="text-pretty text-lg text-muted-foreground">
+      <p className="text-pretty text-lg text-muted-foreground animate-slideInUp stagger-2">
         Paste your messy notes or draft, and let our AI create a beautifully
         formatted report for you.
       </p>

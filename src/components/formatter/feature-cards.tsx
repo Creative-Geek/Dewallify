@@ -43,7 +43,9 @@ export function FeatureCards() {
       {features.map((feature, index) => (
         <Card
           key={index}
-          className="rounded-3xl border-2 border-border bg-card p-6 text-center"
+          className={`rounded-3xl border-2 border-border bg-card p-6 text-center animate-fadeInScale ${
+            index === 0 ? "stagger-1" : index === 1 ? "stagger-2" : "stagger-3"
+          } hover:shadow-lg transition-shadow duration-300`}
         >
           <div
             className={`mx-auto mb-3 w-fit rounded-full ${feature.bgColor} p-3`}

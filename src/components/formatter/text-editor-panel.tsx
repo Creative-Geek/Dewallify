@@ -16,6 +16,7 @@ interface TextEditorPanelProps {
   isInputEmpty?: boolean;
   provider?: ProviderId;
   onProviderChange?: (provider: ProviderId) => void;
+  onSampleText?: () => void;
 }
 
 export function TextEditorPanel({
@@ -30,6 +31,7 @@ export function TextEditorPanel({
   isInputEmpty,
   provider,
   onProviderChange,
+  onSampleText,
 }: TextEditorPanelProps) {
   if (type === "input") {
     return (
@@ -42,6 +44,7 @@ export function TextEditorPanel({
         isInputEmpty={isInputEmpty}
         provider={provider}
         onProviderChange={onProviderChange!}
+        onSampleText={onSampleText}
       />
     );
   }

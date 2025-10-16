@@ -28,6 +28,7 @@ interface InputPanelProps {
   isInputEmpty?: boolean;
   provider?: ProviderId;
   onProviderChange: (provider: ProviderId) => void;
+  onSampleText?: () => void;
 }
 
 export function InputPanel({
@@ -39,6 +40,7 @@ export function InputPanel({
   isInputEmpty,
   provider,
   onProviderChange,
+  onSampleText,
 }: InputPanelProps) {
   return (
     <Card
@@ -53,15 +55,30 @@ export function InputPanel({
         </h2>
       </div>
 
-      <Textarea
-        id="inputText"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="Paste your unformatted text here... It can be notes, emails, articles, or any wall of text that needs structure."
-        className="flex-1 min-h-[300px] resize-none rounded-3xl border-2 border-border bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-primary focus:animate-glowFocus transition-all duration-300"
-        dir="auto"
-        maxLength={8000}
-      />
+      <div className="relative flex-1">
+        <Textarea
+          id="inputText"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Paste your unformatted text here... It can be notes, emails, articles, or any wall of text that needs structure."
+          className="w-full h-full min-h-[300px] resize-none rounded-3xl border-2 border-border bg-background text-foreground placeholder:text-muted-foreground placeholder:opacity-50 focus-visible:ring-primary focus:animate-glowFocus transition-all duration-300"
+          dir="auto"
+          maxLength={8000}
+        />
+
+        {isInputEmpty && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <Button
+              onClick={onSampleText}
+              type="button"
+              className="pointer-events-auto rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:scale-105 transition-all duration-300"
+              size="lg"
+            >
+              Try a Sample
+            </Button>
+          </div>
+        )}
+      </div>
 
       <div className="flex flex-col md:flex-row gap-3 items-center">
         <Button

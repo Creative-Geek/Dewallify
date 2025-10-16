@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         const cerebras = createCerebras({
           apiKey: process.env.CEREBRAS_API_KEY,
         });
-        llm = cerebras('llama-4-maverick-17b-128e-instruct');
+        llm = cerebras('gpt-oss-120b');
         break;
 
       default: // Default to OpenAI

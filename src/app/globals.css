@@ -252,23 +252,23 @@
   }
 
   .animate-fadeInScale {
-    animation: fadeInScale 0.6s ease-out;
+    animation: fadeInScale 0.6s ease-out backwards;
   }
 
   .animate-slideInUp {
-    animation: slideInUp 0.6s ease-out;
+    animation: slideInUp 0.6s ease-out backwards;
   }
 
   .animate-slideInDown {
-    animation: slideInDown 0.6s ease-out;
+    animation: slideInDown 0.6s ease-out backwards;
   }
 
   .animate-slideInLeft {
-    animation: slideInLeft 0.6s ease-out;
+    animation: slideInLeft 0.6s ease-out backwards;
   }
 
   .animate-slideInRight {
-    animation: slideInRight 0.6s ease-out;
+    animation: slideInRight 0.6s ease-out backwards;
   }
   .animate-shake {
     animation: shake 0.5s ease-in-out;

@@ -8,7 +8,7 @@ import { ErrorMessage } from "@/components/formatter/error-message";
 import { TextEditorPanel } from "@/components/formatter/text-editor-panel";
 import { FeatureCards } from "@/components/formatter/feature-cards";
 import { useState } from "react";
-import { Github } from "lucide-react";
+import { Github, PencilLine } from "lucide-react";
 
 export default function DocumentFormatter() {
   const {
@@ -90,6 +90,7 @@ export default function DocumentFormatter() {
             data-tally-open="n0pJPB"
             className="text-muted-foreground hover:text-primary"
           >
+            <PencilLine className="inline-block h-4 w-4 mr-1" />
             Suggest A Feature Or Report A Problem
           </button>
         </div>

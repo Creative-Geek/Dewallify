@@ -16,6 +16,7 @@ export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER
     const [isFormatting, setIsFormatting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [provider, setProvider] = useState<ProviderId>(initialProvider);
+    const [hasInteracted, setHasInteracted] = useState(false);
     const { toast } = useToast();
 
     const formatText = useCallback(async () => {
@@ -172,6 +173,8 @@ export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER
         error,
         provider,
         setProvider,
+        hasInteracted,
+        setHasInteracted,
 
         // Actions
         formatText,

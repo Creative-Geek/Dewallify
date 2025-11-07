@@ -23,6 +23,8 @@ export default function DocumentFormatter() {
     clearAll,
     provider,
     setProvider,
+    hasInteracted,
+    setHasInteracted,
   } = useTextFormatting();
 
   const [isCopied, setIsCopied] = useState(false);
@@ -60,6 +62,13 @@ export default function DocumentFormatter() {
             provider={provider}
             onProviderChange={(p) => setProvider(p)}
             onSampleText={handleSampleText}
+            hasInteracted={hasInteracted}
+            onFocus={() => setHasInteracted(true)}
+            onBlur={() => {
+              if (!inputText.trim()) {
+                setHasInteracted(false);
+              }
+            }}
           />
 
           {/* Output Panel */}
@@ -94,7 +103,7 @@ export default function DocumentFormatter() {
           <span className="mx-2 text-muted-foreground">•</span>
           <button
             data-tally-open="n0pJPB"
-            className="text-muted-foreground hover:text-primary"
+            className="text-muted-foreground hover:text-primary cursor-pointer"
           >
             <PencilLine className="inline-block h-4 w-4 mr-1" />
             Suggest A Feature Or Report A Problem

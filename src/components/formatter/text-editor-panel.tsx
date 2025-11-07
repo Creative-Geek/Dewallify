@@ -17,6 +17,9 @@ interface TextEditorPanelProps {
   provider?: ProviderId;
   onProviderChange?: (provider: ProviderId) => void;
   onSampleText?: () => void;
+  hasInteracted?: boolean;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 export function TextEditorPanel({
@@ -32,6 +35,9 @@ export function TextEditorPanel({
   provider,
   onProviderChange,
   onSampleText,
+  hasInteracted,
+  onFocus,
+  onBlur,
 }: TextEditorPanelProps) {
   if (type === "input") {
     return (
@@ -45,6 +51,9 @@ export function TextEditorPanel({
         provider={provider}
         onProviderChange={onProviderChange!}
         onSampleText={onSampleText}
+        hasInteracted={hasInteracted}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
     );
   }

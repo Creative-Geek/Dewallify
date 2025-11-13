@@ -74,18 +74,27 @@ export function InputPanel({
           maxLength={8000}
         />
 
-        {isInputEmpty && !hasInteracted && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <Button
-              onClick={onSampleText}
-              type="button"
-              className="pointer-events-auto rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:scale-105 transition-all duration-300"
-              size="lg"
-            >
-              Try a Sample
-            </Button>
-          </div>
-        )}
+        <div 
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          aria-hidden={!isInputEmpty || hasInteracted}
+          style={{
+            pointerEvents: isInputEmpty && !hasInteracted ? 'none' : 'none',
+          }}
+        >
+          <Button
+            onClick={onSampleText}
+            type="button"
+            className="pointer-events-auto rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:scale-105 transition-all duration-300"
+            size="lg"
+            style={{
+              opacity: isInputEmpty && !hasInteracted ? 1 : 0,
+              pointerEvents: isInputEmpty && !hasInteracted ? 'auto' : 'none',
+              transition: 'opacity 0.2s ease-in-out',
+            }}
+          >
+            Try a Sample
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-3 items-center">

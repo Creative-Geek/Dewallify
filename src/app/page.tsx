@@ -31,12 +31,25 @@ export default function DocumentFormatter() {
 
   const handleSampleText = () => {
     setInputText(SAMPLE_TEXT);
+    setHasInteracted(true); // Hide button after inserting sample text
   };
 
   const handleCopy = async () => {
     await copyToClipboard();
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  const handleClear = () => {
+    clearAll();
+    setHasInteracted(false); // Show button after clearing
+    // Refocus the input field
+    setTimeout(() => {
+      const inputElement = document.getElementById("inputText");
+      if (inputElement) {
+        inputElement.focus();
+      }
+    }, 0);
   };
 
   return (
@@ -54,9 +67,15 @@ export default function DocumentFormatter() {
           <TextEditorPanel
             type="input"
             value={inputText}
-            onChange={setInputText}
+            onChange={(text) => {
+              setInputText(text);
+              // Hide button on any input (including paste, programmatic insert)
+              if (text.trim()) {
+                setHasInteracted(true);
+              }
+            }}
             onFormat={formatText}
-            onClear={clearAll}
+            onClear={handleClear}
             isFormatting={isFormatting}
             isInputEmpty={!inputText.trim()}
             provider={provider}

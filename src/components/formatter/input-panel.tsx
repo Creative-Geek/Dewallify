@@ -77,9 +77,6 @@ export function InputPanel({
         <div 
           className="absolute inset-0 flex items-center justify-center pointer-events-none"
           aria-hidden={!isInputEmpty || hasInteracted}
-          style={{
-            pointerEvents: isInputEmpty && !hasInteracted ? 'none' : 'none',
-          }}
         >
           <Button
             onClick={onSampleText}

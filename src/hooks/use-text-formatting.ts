@@ -130,9 +130,10 @@ export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER
 
         try {
             // Use marked and DOMPurify to create consistent and safe HTML for the clipboard
+            // Using 'inherit' for styles allows the target application to apply its own fonts
             const rawHtml = marked.parse(formattedText) as string;
             const styledHtmlContent = `
-                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6;">
+                <div style="font-family: inherit; font-size: inherit; line-height: inherit;">
                     ${rawHtml}
                 </div>
             `;

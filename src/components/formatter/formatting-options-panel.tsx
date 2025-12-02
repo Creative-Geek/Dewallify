@@ -108,7 +108,7 @@ function HeadingLevelSelect({
       {/* Dropdown with fast fade in/out scoped to this component */}
       <div
         className={`
-          absolute z-50 mt-1 w-full min-w-[160px]
+          absolute z-50 mt-1 w-full
           rounded-2xl border-2 border-border bg-background shadow-lg
           overflow-hidden
           transition-[opacity,transform] duration-150 ease-out origin-top

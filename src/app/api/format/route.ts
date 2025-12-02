@@ -25,10 +25,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Enforce maximum input length for security
-    if (typeof text === "string" && text.length > 8000) {
+    if (typeof text === "string" && text.length > 25000) {
       console.warn("Input exceeds maximum allowed length:", text.length);
       return NextResponse.json(
-        { error: "Input too long. Maximum allowed is 8000 characters." },
+        { error: "Input too long. Maximum allowed is 25000 characters." },
         { status: 413 }
       );
     }

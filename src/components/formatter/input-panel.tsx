@@ -71,7 +71,7 @@ export function InputPanel({
           placeholder="Paste your unformatted text here... It can be notes, emails, articles, or any wall of text that needs structure."
           className="w-full h-full min-h-[300px] resize-none rounded-3xl border-2 border-border bg-background text-foreground placeholder:text-muted-foreground placeholder:opacity-50 focus-visible:ring-primary focus:animate-glowFocus transition-all duration-300"
           dir="auto"
-          maxLength={8000}
+          maxLength={25000}
         />
 
         {isInputEmpty && !hasInteracted && (

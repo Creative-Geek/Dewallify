@@ -4,6 +4,9 @@ import { Card } from "@/components/ui/card";
 import { Sparkles, FileText, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PROVIDER_MODES, type ProviderId } from "@/lib/providers";
+import { useState } from "react";
+import { type FormattingOptions } from "@/lib/formatting-options";
+import { FormattingOptionsPanel } from "./formatting-options-panel";
 import { Ubuntu } from "next/font/google";
 
 const ubuntu = Ubuntu({
@@ -28,6 +31,8 @@ interface InputPanelProps {
   isInputEmpty?: boolean;
   provider?: ProviderId;
   onProviderChange: (provider: ProviderId) => void;
+  formattingOptions?: FormattingOptions;
+  onFormattingOptionsChange?: (options: FormattingOptions) => void;
   onSampleText?: () => void;
   hasInteracted?: boolean;
   onFocus?: () => void;
@@ -43,11 +48,15 @@ export function InputPanel({
   isInputEmpty,
   provider,
   onProviderChange,
+  formattingOptions,
+  onFormattingOptionsChange,
   onSampleText,
   hasInteracted = false,
   onFocus,
   onBlur,
 }: InputPanelProps) {
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+
   return (
     <Card
       className={`${ubuntu.className} flex flex-col h-full gap-4 rounded-[2rem] border-2 border-border bg-card p-6 shadow-sm animate-slideInLeft`}
@@ -135,6 +144,8 @@ export function InputPanel({
             </div>
           </div>
 
+          {/* (moved) Formatting Options panel will appear below the buttons when opened */}
+
           <Button
             onClick={onClear}
             variant="outline"
@@ -145,6 +156,26 @@ export function InputPanel({
           </Button>
         </div>
       </div>
+
+      {/* Advanced options toggle (placed under the main buttons) */}
+      {formattingOptions && onFormattingOptionsChange && (
+        <div className="flex flex-col items-center">
+          <button
+            type="button"
+            onClick={() => setAdvancedOpen((s) => !s)}
+            className="inline-flex items-center px-2 py-1 text-sm text-muted-foreground rounded-md transition-colors duration-150 hover:bg-muted hover:text-foreground"
+          >
+            Advanced options
+            <span className="ml-1.5">{advancedOpen ? "▲" : "▼"}</span>
+          </button>
+
+          <FormattingOptionsPanel
+            open={advancedOpen}
+            options={formattingOptions}
+            onChange={onFormattingOptionsChange}
+          />
+        </div>
+      )}
     </Card>
   );
 }

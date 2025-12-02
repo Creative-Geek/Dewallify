@@ -25,6 +25,8 @@ export default function DocumentFormatter() {
     setProvider,
     hasInteracted,
     setHasInteracted,
+    formattingOptions,
+    setFormattingOptions,
   } = useTextFormatting();
 
   const [isCopied, setIsCopied] = useState(false);
@@ -61,6 +63,8 @@ export default function DocumentFormatter() {
             isInputEmpty={!inputText.trim()}
             provider={provider}
             onProviderChange={(p) => setProvider(p)}
+            formattingOptions={formattingOptions}
+            onFormattingOptionsChange={setFormattingOptions}
             onSampleText={handleSampleText}
             hasInteracted={hasInteracted}
             onFocus={() => setHasInteracted(true)}

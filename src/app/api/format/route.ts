@@ -6,15 +6,19 @@ import { createGroq } from '@ai-sdk/groq';
 import { createCerebras } from '@ai-sdk/cerebras';
 import { streamText, CoreMessage } from 'ai';
 import { NextRequest, NextResponse } from "next/server";
-import { systemInstruction } from "@/lib/system-instruction";
+import { buildSystemInstruction } from "@/lib/system-instruction";
+import { DEFAULT_FORMATTING_OPTIONS, type FormattingOptions } from "@/lib/formatting-options";
 
 export const maxDuration = 30;
 
 export async function POST(request: NextRequest) {
   try {
     console.log("API route called");
-    const { text, provider } = await request.json();
+    const { text, provider, formattingOptions } = await request.json();
     console.log("Text received, length:", text?.length, "Provider:", provider);
+
+    // Use provided formatting options or defaults
+    const options: FormattingOptions = formattingOptions || DEFAULT_FORMATTING_OPTIONS;
 
     if (!text || typeof text !== "string") {
       console.error("Invalid input text received:", typeof text);
@@ -72,7 +76,7 @@ export async function POST(request: NextRequest) {
 
     // Construct messages for the AI SDK
     const messages: CoreMessage[] = [
-      { role: 'system', content: systemInstruction },
+      { role: 'system', content: buildSystemInstruction(options) },
       { role: 'user', content: text },
     ];
 

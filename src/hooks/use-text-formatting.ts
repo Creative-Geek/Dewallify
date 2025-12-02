@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
 import { DEFAULT_PROVIDER, type ProviderId } from "@/lib/providers";
+import { DEFAULT_FORMATTING_OPTIONS, type FormattingOptions } from "@/lib/formatting-options";
 
 interface UseTextFormattingProps {
     provider?: ProviderId; // initial provider; defaults to 'cerebras' (Speed)
@@ -17,6 +18,7 @@ export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER
     const [error, setError] = useState<string | null>(null);
     const [provider, setProvider] = useState<ProviderId>(initialProvider);
     const [hasInteracted, setHasInteracted] = useState(false);
+    const [formattingOptions, setFormattingOptions] = useState<FormattingOptions>(DEFAULT_FORMATTING_OPTIONS);
     const { toast } = useToast();
 
     const formatText = useCallback(async () => {
@@ -36,6 +38,7 @@ export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER
                 body: JSON.stringify({
                     text: inputText,
                     provider,
+                    formattingOptions,
                 }),
             });
 
@@ -123,7 +126,7 @@ export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER
         } finally {
             setIsFormatting(false);
         }
-    }, [inputText, provider]);
+    }, [inputText, provider, formattingOptions]);
 
     const copyToClipboard = useCallback(async () => {
         if (!formattedText) return;
@@ -176,6 +179,8 @@ export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER
         setProvider,
         hasInteracted,
         setHasInteracted,
+        formattingOptions,
+        setFormattingOptions,
 
         // Actions
         formatText,

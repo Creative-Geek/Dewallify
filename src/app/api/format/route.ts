@@ -103,7 +103,18 @@ export async function POST(request: NextRequest) {
           controller.close();
         } catch (error) {
           console.error("Error processing stream:", error);
-          controller.error(error);
+          // Send a generic error to the frontend — never leak model names or internal details
+          const message = "Something went wrong with the AI provider. Please try again or switch providers.";
+          try {
+            controller.enqueue(
+              encoder.encode(
+                JSON.stringify({ error: message }) + '\n',
+              ),
+            );
+          } catch {
+            // controller may already be errored, ignore
+          }
+          controller.close();
         }
       },
     });

@@ -69,6 +69,9 @@ export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER
                     if (accumulatedText !== lastUpdateText) {
                         setFormattedText(accumulatedText);
                     }
+                    if (!accumulatedText.trim()) {
+                        throw new Error("No response received from the AI provider. Please try again or switch providers.");
+                    }
                     break;
                 }
 
@@ -81,7 +84,9 @@ export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER
                     for (const line of lines) {
                         if (line.trim()) {
                             const data = JSON.parse(line);
-                            if (data.chunk) {
+                            if (data.error) {
+                                throw new Error(data.error);
+                            } else if (data.chunk) {
                                 accumulatedText += data.chunk;
                                 updateCounter++;
 

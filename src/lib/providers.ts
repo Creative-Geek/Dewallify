@@ -1,5 +1,5 @@
 export const PROVIDER_MODES = [
-    { id: "cerebras", label: "Speed" },
+    { id: "nvidia", label: "Speed" },
     { id: "gemini", label: "Quality" },
     // { id: "claude", label: "Creative" },
 ] as const;

@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
         const groq = createGroq({
           apiKey: process.env.GROQ_API_KEY,
         });
-        llm = groq('moonshotai/kimi-k2-instruct-0905');
+        llm = groq('moonshotai/llama-3.3-70b-versatile');
         break;
 
       case 'google':
@@ -62,7 +62,14 @@ export async function POST(request: NextRequest) {
         const cerebras = createCerebras({
           apiKey: process.env.CEREBRAS_API_KEY,
         });
-        llm = cerebras('gpt-oss-120b');
+        llm = cerebras('qwen-3-235b-a22b-instruct-2507');
+        break;
+      case 'nvidia':
+        const nvidia = createOpenAI({
+          apiKey: process.env.NVIDIA_API_KEY,
+          baseURL: process.env.NVIDIA_API_BASE,
+        });
+        llm = nvidia('moonshotai/kimi-k2.5');
         break;
 
       default: // Default to OpenAI

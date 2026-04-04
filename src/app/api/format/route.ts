@@ -65,11 +65,19 @@ export async function POST(request: NextRequest) {
         llm = cerebras('qwen-3-235b-a22b-instruct-2507');
         break;
       case 'nvidia':
+        // NVIDIA uses an OpenAI-compatible Chat Completions endpoint at /v1/chat/completions.
+        // Normalize base URL so production values like https://integrate.api.nvidia.com/ still work.
+        const rawNvidiaBase = process.env.NVIDIA_API_BASE || 'https://integrate.api.nvidia.com/v1';
+        const trimmedNvidiaBase = rawNvidiaBase.replace(/\/+$/, '');
+        const nvidiaBaseURL = trimmedNvidiaBase.endsWith('/v1')
+          ? trimmedNvidiaBase
+          : `${trimmedNvidiaBase}/v1`;
         const nvidia = createOpenAI({
           apiKey: process.env.NVIDIA_API_KEY,
-          baseURL: process.env.NVIDIA_API_BASE,
+          baseURL: nvidiaBaseURL,
+          name: 'nvidia',
         });
-        llm = nvidia('moonshotai/kimi-k2.5');
+        llm = nvidia.chat('moonshotai/kimi-k2.5');
         break;
 
       default: // Default to OpenAI

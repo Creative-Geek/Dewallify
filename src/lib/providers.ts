@@ -1,6 +1,7 @@
 export const PROVIDER_MODES = [
     { id: "nvidia", label: "Speed" },
     { id: "gemini", label: "Quality" },
+    // { id: "electron-hub", label: "Experimental" },
     // { id: "claude", label: "Creative" },
 ] as const;
 

@@ -77,15 +77,23 @@ export async function POST(request: NextRequest) {
           baseURL: nvidiaBaseURL,
           name: 'nvidia',
         });
-        llm = nvidia.chat('moonshotai/kimi-k2.5');
+        llm = nvidia.chat('nvidia/nemotron-3-super-120b-a12b');
         break;
-
+      case 'electron-hub':
+        // Electron Hub also uses an OpenAI-compatible API, but with a different model name and base URL.
+        const electronHub = createOpenAI({
+          apiKey: process.env.ELECTRON_HUB_API_KEY,
+          baseURL: process.env.ELECTRON_HUB_API_BASE,
+          name: 'electron-hub',
+        });
+        llm = electronHub.chat('gpt-oss-120b:free');
+        break;
       default: // Default to OpenAI
         const openai = createOpenAI({
           apiKey: process.env.OPENAI_API_KEY,
           baseURL: process.env.OPENAI_API_BASE,
         });
-        llm = openai('gpt-5-chat-latest:free');
+        llm = openai('gpt-oss-120b:free');
         break;
     }
 

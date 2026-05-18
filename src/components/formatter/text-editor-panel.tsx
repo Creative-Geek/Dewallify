@@ -1,6 +1,6 @@
 // This component renders a text editor panel that can be configured as either an input for raw text or an output for formatted text. It handles user input, displays formatted content, and provides controls for formatting, clearing, and copying text.
 
-import { type ProviderId } from "@/lib/providers";
+import { type ModeId } from "@/lib/modes";
 import { type FormattingOptions } from "@/lib/formatting-options";
 import { InputPanel } from "./input-panel";
 import { OutputPanel } from "./output-panel";
@@ -15,8 +15,8 @@ interface TextEditorPanelProps {
   onFormat?: () => void;
   onClear?: () => void;
   isInputEmpty?: boolean;
-  provider?: ProviderId;
-  onProviderChange?: (provider: ProviderId) => void;
+  mode?: ModeId;
+  onModeChange?: (mode: ModeId) => void;
   formattingOptions?: FormattingOptions;
   onFormattingOptionsChange?: (options: FormattingOptions) => void;
   onSampleText?: () => void;
@@ -35,8 +35,8 @@ export function TextEditorPanel({
   onFormat,
   onClear,
   isInputEmpty,
-  provider,
-  onProviderChange,
+  mode,
+  onModeChange,
   formattingOptions,
   onFormattingOptionsChange,
   onSampleText,
@@ -53,8 +53,8 @@ export function TextEditorPanel({
         onFormat={onFormat!}
         onClear={onClear!}
         isInputEmpty={isInputEmpty}
-        provider={provider}
-        onProviderChange={onProviderChange!}
+        mode={mode}
+        onModeChange={onModeChange!}
         formattingOptions={formattingOptions}
         onFormattingOptionsChange={onFormattingOptionsChange}
         onSampleText={onSampleText}

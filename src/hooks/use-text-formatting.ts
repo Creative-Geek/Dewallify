@@ -4,19 +4,19 @@ import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
-import { DEFAULT_PROVIDER, type ProviderId } from "@/lib/providers";
+import { DEFAULT_MODE, type ModeId } from "@/lib/modes";
 import { DEFAULT_FORMATTING_OPTIONS, type FormattingOptions } from "@/lib/formatting-options";
 
 interface UseTextFormattingProps {
-    provider?: ProviderId; // initial provider; defaults to 'cerebras' (Speed)
+    mode?: ModeId;
 }
 
-export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER }: UseTextFormattingProps = {}) {
+export function useTextFormatting({ mode: initialMode = DEFAULT_MODE }: UseTextFormattingProps = {}) {
     const [inputText, setInputText] = useState("");
     const [formattedText, setFormattedText] = useState("");
     const [isFormatting, setIsFormatting] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [provider, setProvider] = useState<ProviderId>(initialProvider);
+    const [mode, setMode] = useState<ModeId>(initialMode);
     const [hasInteracted, setHasInteracted] = useState(false);
     const [formattingOptions, setFormattingOptions] = useState<FormattingOptions>(DEFAULT_FORMATTING_OPTIONS);
     const { toast } = useToast();
@@ -37,7 +37,7 @@ export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     text: inputText,
-                    provider,
+                    provider: mode,
                     formattingOptions,
                 }),
             });
@@ -131,7 +131,7 @@ export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER
         } finally {
             setIsFormatting(false);
         }
-    }, [inputText, provider, formattingOptions]);
+    }, [inputText, mode, formattingOptions]);
 
     const copyToClipboard = useCallback(async () => {
         if (!formattedText) return;
@@ -180,8 +180,8 @@ export function useTextFormatting({ provider: initialProvider = DEFAULT_PROVIDER
         formattedText,
         isFormatting,
         error,
-        provider,
-        setProvider,
+        mode,
+        setMode,
         hasInteracted,
         setHasInteracted,
         formattingOptions,

@@ -3,7 +3,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Sparkles, FileText, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PROVIDER_MODES, type ProviderId } from "@/lib/providers";
+import { MODES, type ModeId } from "@/lib/modes";
 import { useState } from "react";
 import { type FormattingOptions } from "@/lib/formatting-options";
 import { FormattingOptionsPanel } from "./formatting-options-panel";
@@ -29,8 +29,8 @@ interface InputPanelProps {
   onFormat: () => void;
   onClear: () => void;
   isInputEmpty?: boolean;
-  provider?: ProviderId;
-  onProviderChange: (provider: ProviderId) => void;
+  mode?: ModeId;
+  onModeChange: (mode: ModeId) => void;
   formattingOptions?: FormattingOptions;
   onFormattingOptionsChange?: (options: FormattingOptions) => void;
   onSampleText?: () => void;
@@ -46,8 +46,8 @@ export function InputPanel({
   onFormat,
   onClear,
   isInputEmpty,
-  provider,
-  onProviderChange,
+  mode,
+  onModeChange,
   formattingOptions,
   onFormattingOptionsChange,
   onSampleText,
@@ -123,13 +123,13 @@ export function InputPanel({
               Mode:
             </span>
             <div className="inline-flex rounded-full overflow-hidden border-1">
-              {PROVIDER_MODES.map(({ id, label }) => {
-                const isActive = provider === id;
+              {MODES.map(({ id, label }) => {
+                const isActive = mode === id;
                 return (
                   <button
                     key={id}
                     type="button"
-                    onClick={() => onProviderChange(id)}
+                    onClick={() => onModeChange(id)}
                     className={`px-3 py-2 text-sm transition-all duration-300 hover:scale-105 ${
                       isActive
                         ? "bg-primary text-primary-foreground shadow-md"

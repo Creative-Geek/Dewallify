@@ -1,10 +1,8 @@
 // This API route handles text formatting requests. It receives text and a provider, then uses the selected AI provider to format the text as Markdown based on a detailed system instruction. It streams the formatted text back to the client.
 
-import { createOpenAI } from "@ai-sdk/openai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { createGroq } from "@ai-sdk/groq";
-import { createCerebras } from "@ai-sdk/cerebras";
 import { streamText } from "ai";
+import { createModel } from "@/lib/providers";
+import { resolveProvider } from "@/lib/modes";
 import { NextRequest, NextResponse } from "next/server";
 import { buildSystemInstruction } from "@/lib/system-instruction";
 import {
@@ -18,7 +16,6 @@ export async function POST(request: NextRequest) {
   try {
     console.log("API route called");
     const { text, provider, formattingOptions } = await request.json();
-    console.log("Text received, length:", text?.length, "Provider:", provider);
 
     // Use provided formatting options or defaults
     const options: FormattingOptions =
@@ -41,65 +38,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let llm;
-
-    // Dynamically select the provider and model
-    // Model selection is centralized here in the backend
-    switch (provider) {
-      case "groq":
-        const groq = createGroq({
-          apiKey: process.env.GROQ_API_KEY,
-        });
-        llm = groq("moonshotai/llama-3.3-70b-versatile");
-        break;
-
-      case "google":
-      case "gemini": // alias for Google Gemini
-        const google = createGoogleGenerativeAI({
-          apiKey: process.env.GEMINI_API_KEY,
-        });
-        llm = google("gemini-2.5-flash");
-        break;
-
-      case "cerebras":
-        const cerebras = createCerebras({
-          apiKey: process.env.CEREBRAS_API_KEY,
-        });
-        llm = cerebras("qwen-3-235b-a22b-instruct-2507");
-        break;
-      case "nvidia":
-        // NVIDIA uses an OpenAI-compatible Chat Completions endpoint at /v1/chat/completions.
-        // Normalize base URL so production values like https://integrate.api.nvidia.com/ still work.
-        const rawNvidiaBase =
-          process.env.NVIDIA_API_BASE || "https://integrate.api.nvidia.com/v1";
-        const trimmedNvidiaBase = rawNvidiaBase.replace(/\/+$/, "");
-        const nvidiaBaseURL = trimmedNvidiaBase.endsWith("/v1")
-          ? trimmedNvidiaBase
-          : `${trimmedNvidiaBase}/v1`;
-        const nvidia = createOpenAI({
-          apiKey: process.env.NVIDIA_API_KEY,
-          baseURL: nvidiaBaseURL,
-          name: "nvidia",
-        });
-        llm = nvidia.chat("nvidia/nemotron-3-super-120b-a12b");
-        break;
-      case "electron-hub":
-        // Electron Hub also uses an OpenAI-compatible API, but with a different model name and base URL.
-        const electronHub = createOpenAI({
-          apiKey: process.env.ELECTRON_HUB_API_KEY,
-          baseURL: process.env.ELECTRON_HUB_API_BASE,
-          name: "electron-hub",
-        });
-        llm = electronHub.chat("gpt-oss-120b:free");
-        break;
-      default: // Default to OpenAI
-        const openai = createOpenAI({
-          apiKey: process.env.OPENAI_API_KEY,
-          baseURL: process.env.OPENAI_API_BASE,
-        });
-        llm = openai("gpt-oss-120b:free");
-        break;
-    }
+    const resolvedProvider = resolveProvider(provider);
+    const llm = createModel(resolvedProvider);
+    console.log(
+      "Text received, length:",
+      text?.length,
+      " | Mode:",
+      provider,
+      " | Provider:",
+      resolvedProvider,
+      " | Model:",
+      (llm as { modelId: string }).modelId,
+    );
 
     // Construct messages for the AI SDK
     const result = streamText({

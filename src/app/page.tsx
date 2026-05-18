@@ -21,8 +21,8 @@ export default function DocumentFormatter() {
     formatText,
     copyToClipboard,
     clearAll,
-    provider,
-    setProvider,
+    mode,
+    setMode,
     hasInteracted,
     setHasInteracted,
     formattingOptions,
@@ -61,8 +61,8 @@ export default function DocumentFormatter() {
             onClear={clearAll}
             isFormatting={isFormatting}
             isInputEmpty={!inputText.trim()}
-            provider={provider}
-            onProviderChange={(p) => setProvider(p)}
+            mode={mode}
+            onModeChange={(p) => setMode(p)}
             formattingOptions={formattingOptions}
             onFormattingOptionsChange={setFormattingOptions}
             onSampleText={handleSampleText}

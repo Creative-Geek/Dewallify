@@ -1,13 +1,16 @@
 // This API route handles text formatting requests. It receives text and a provider, then uses the selected AI provider to format the text as Markdown based on a detailed system instruction. It streams the formatted text back to the client.
 
-import { createOpenAI } from '@ai-sdk/openai';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { createGroq } from '@ai-sdk/groq';
-import { createCerebras } from '@ai-sdk/cerebras';
-import { streamText, CoreMessage } from 'ai';
+import { createOpenAI } from "@ai-sdk/openai";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createGroq } from "@ai-sdk/groq";
+import { createCerebras } from "@ai-sdk/cerebras";
+import { streamText } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import { buildSystemInstruction } from "@/lib/system-instruction";
-import { DEFAULT_FORMATTING_OPTIONS, type FormattingOptions } from "@/lib/formatting-options";
+import {
+  DEFAULT_FORMATTING_OPTIONS,
+  type FormattingOptions,
+} from "@/lib/formatting-options";
 
 export const maxDuration = 30;
 
@@ -18,7 +21,8 @@ export async function POST(request: NextRequest) {
     console.log("Text received, length:", text?.length, "Provider:", provider);
 
     // Use provided formatting options or defaults
-    const options: FormattingOptions = formattingOptions || DEFAULT_FORMATTING_OPTIONS;
+    const options: FormattingOptions =
+      formattingOptions || DEFAULT_FORMATTING_OPTIONS;
 
     if (!text || typeof text !== "string") {
       console.error("Invalid input text received:", typeof text);
@@ -33,79 +37,75 @@ export async function POST(request: NextRequest) {
       console.warn("Input exceeds maximum allowed length:", text.length);
       return NextResponse.json(
         { error: "Input too long. Maximum allowed is 25000 characters." },
-        { status: 413 }
+        { status: 413 },
       );
     }
-
 
     let llm;
 
     // Dynamically select the provider and model
     // Model selection is centralized here in the backend
     switch (provider) {
-      case 'groq':
+      case "groq":
         const groq = createGroq({
           apiKey: process.env.GROQ_API_KEY,
         });
-        llm = groq('moonshotai/llama-3.3-70b-versatile');
+        llm = groq("moonshotai/llama-3.3-70b-versatile");
         break;
 
-      case 'google':
-      case 'gemini': // alias for Google Gemini
+      case "google":
+      case "gemini": // alias for Google Gemini
         const google = createGoogleGenerativeAI({
           apiKey: process.env.GEMINI_API_KEY,
         });
-        llm = google('gemini-2.5-flash');
+        llm = google("gemini-2.5-flash");
         break;
 
-      case 'cerebras':
+      case "cerebras":
         const cerebras = createCerebras({
           apiKey: process.env.CEREBRAS_API_KEY,
         });
-        llm = cerebras('qwen-3-235b-a22b-instruct-2507');
+        llm = cerebras("qwen-3-235b-a22b-instruct-2507");
         break;
-      case 'nvidia':
+      case "nvidia":
         // NVIDIA uses an OpenAI-compatible Chat Completions endpoint at /v1/chat/completions.
         // Normalize base URL so production values like https://integrate.api.nvidia.com/ still work.
-        const rawNvidiaBase = process.env.NVIDIA_API_BASE || 'https://integrate.api.nvidia.com/v1';
-        const trimmedNvidiaBase = rawNvidiaBase.replace(/\/+$/, '');
-        const nvidiaBaseURL = trimmedNvidiaBase.endsWith('/v1')
+        const rawNvidiaBase =
+          process.env.NVIDIA_API_BASE || "https://integrate.api.nvidia.com/v1";
+        const trimmedNvidiaBase = rawNvidiaBase.replace(/\/+$/, "");
+        const nvidiaBaseURL = trimmedNvidiaBase.endsWith("/v1")
           ? trimmedNvidiaBase
           : `${trimmedNvidiaBase}/v1`;
         const nvidia = createOpenAI({
           apiKey: process.env.NVIDIA_API_KEY,
           baseURL: nvidiaBaseURL,
-          name: 'nvidia',
+          name: "nvidia",
         });
-        llm = nvidia.chat('nvidia/nemotron-3-super-120b-a12b');
+        llm = nvidia.chat("nvidia/nemotron-3-super-120b-a12b");
         break;
-      case 'electron-hub':
+      case "electron-hub":
         // Electron Hub also uses an OpenAI-compatible API, but with a different model name and base URL.
         const electronHub = createOpenAI({
           apiKey: process.env.ELECTRON_HUB_API_KEY,
           baseURL: process.env.ELECTRON_HUB_API_BASE,
-          name: 'electron-hub',
+          name: "electron-hub",
         });
-        llm = electronHub.chat('gpt-oss-120b:free');
+        llm = electronHub.chat("gpt-oss-120b:free");
         break;
       default: // Default to OpenAI
         const openai = createOpenAI({
           apiKey: process.env.OPENAI_API_KEY,
           baseURL: process.env.OPENAI_API_BASE,
         });
-        llm = openai('gpt-oss-120b:free');
+        llm = openai("gpt-oss-120b:free");
         break;
     }
 
     // Construct messages for the AI SDK
-    const messages: CoreMessage[] = [
-      { role: 'system', content: buildSystemInstruction(options) },
-      { role: 'user', content: text },
-    ];
-
     const result = streamText({
       model: llm,
-      messages: messages,
+      system: buildSystemInstruction(options),
+      prompt: text,
     });
 
     // Respond with the stream, sending chunks as they arrive
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
               encoder.encode(
                 JSON.stringify({
                   chunk: chunk,
-                }) + '\n',
+                }) + "\n",
               ),
             );
           }
@@ -127,12 +127,11 @@ export async function POST(request: NextRequest) {
         } catch (error) {
           console.error("Error processing stream:", error);
           // Send a generic error to the frontend — never leak model names or internal details
-          const message = "Something went wrong with the AI provider. Please try again or switch providers.";
+          const message =
+            "Something went wrong with the AI provider. Please try again or switch providers.";
           try {
             controller.enqueue(
-              encoder.encode(
-                JSON.stringify({ error: message }) + '\n',
-              ),
+              encoder.encode(JSON.stringify({ error: message }) + "\n"),
             );
           } catch {
             // controller may already be errored, ignore
@@ -146,11 +145,10 @@ export async function POST(request: NextRequest) {
       headers: {
         "Content-Type": "application/json",
         "Cache-Control": "no-cache",
-        "Connection": "keep-alive",
+        Connection: "keep-alive",
         "Transfer-Encoding": "chunked",
       },
     });
-
   } catch (error) {
     console.error("Error formatting text:", error);
     const errorObj = error as any;

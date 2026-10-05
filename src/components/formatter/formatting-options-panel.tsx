@@ -1,7 +1,7 @@
 // src/components/formatter/formatting-options-panel.tsx
 // Collapsible panel for controlling which Markdown elements the AI generates
 
-import { Settings, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import {
   type FormattingOptions,

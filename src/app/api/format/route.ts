@@ -102,15 +102,15 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error formatting text:", error);
-    const errorObj = error as any;
+    const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Error details:", {
-      name: errorObj?.name,
-      message: errorObj?.message,
-      stack: errorObj?.stack,
+      name: error instanceof Error ? error.name : "UnknownError",
+      message: errorMessage,
+      stack: error instanceof Error ? error.stack : undefined,
     });
 
     // Check for specific API key errors
-    if (errorObj?.message?.includes("API_KEY_INVALID")) {
+    if (errorMessage.includes("API_KEY_INVALID")) {
       return NextResponse.json(
         {
           error:
@@ -121,8 +121,8 @@ export async function POST(request: NextRequest) {
     }
 
     if (
-      errorObj?.message?.includes("quota") ||
-      errorObj?.message?.includes("limit")
+      errorMessage.includes("quota") ||
+      errorMessage.includes("limit")
     ) {
       return NextResponse.json(
         { error: "API quota exceeded. Please try again later." },
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        error: `Failed to format text: ${errorObj?.message || "Unknown error"}`,
+        error: `Failed to format text: ${errorMessage || "Unknown error"}`,
       },
       { status: 500 },
     );

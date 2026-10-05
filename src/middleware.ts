@@ -4,7 +4,6 @@ import type { NextRequest } from 'next/server'
 // Rate limiting configuration using a rolling window
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
 const MAX_REQUESTS = 5 // Maximum requests per window
-const WINDOW_SIZE = 1000 // Store timestamps for more accurate rate limiting
 const ipRequestMap = new Map<string, number[]>()
 
 // Security headers

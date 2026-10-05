@@ -108,7 +108,7 @@ export function useTextFormatting({ mode: initialMode = DEFAULT_MODE }: UseTextF
                             }
                         }
                     }
-                } catch (parseError) {
+                } catch {
                     // If JSON parsing fails, treat as raw text chunk
                     accumulatedText += chunk;
                     updateCounter++;
@@ -157,7 +157,7 @@ export function useTextFormatting({ mode: initialMode = DEFAULT_MODE }: UseTextF
                 title: "Copied to clipboard",
                 description: "Formatted text copied successfully!",
             });
-        } catch (err) {
+        } catch {
             // Fallback to plain text copy if rich text copy fails
             await navigator.clipboard.writeText(formattedText);
             toast({

@@ -113,9 +113,9 @@ function HeadingLevelSelect({
           overflow-hidden
           transition-[opacity,transform] duration-150 ease-out origin-top
           ${
-            isOpen && !disabled
-              ? "opacity-100 scale-y-100 pointer-events-auto"
-              : "opacity-0 scale-y-95 pointer-events-none"
+            isOpen && !disabled ?
+              "opacity-100 scale-y-100 pointer-events-auto"
+            : "opacity-0 scale-y-95 pointer-events-none"
           }
         `}
       >
@@ -131,9 +131,9 @@ function HeadingLevelSelect({
               w-full px-3 py-2 text-sm text-left
               transition-colors duration-100
               ${
-                value === option.value
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted text-foreground"
+                value === option.value ?
+                  "bg-primary text-primary-foreground"
+                : "hover:bg-muted text-foreground"
               }
             `}
           >
@@ -175,14 +175,14 @@ export function FormattingOptionsPanel({
 }: FormattingOptionsPanelProps) {
   const updateOption = <K extends keyof FormattingOptions>(
     key: K,
-    value: FormattingOptions[K]
+    value: FormattingOptions[K],
   ) => {
     onChange({ ...options, [key]: value });
   };
 
   const updateHeadingOption = (
     key: keyof FormattingOptions["headings"],
-    value: boolean | number
+    value: boolean | number,
   ) => {
     onChange({
       ...options,

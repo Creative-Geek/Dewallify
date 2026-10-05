@@ -1,6 +1,31 @@
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
+
 ignoredBuiltDependencies:
-  - '@tailwindcss/oxide'
+  - "@tailwindcss/oxide"
 
 onlyBuiltDependencies:
   - sharp
   - unrs-resolver
+
+overrides:
+  "minimatch@^3": ^3.1.4
+  "minimatch@>=9.0.0 <9.0.7": 9.0.7
+  flatted: ^3.4.2
+  "ajv@^6": ^6.14.1
+  "brace-expansion@^1": ^1.1.21
+  "brace-expansion@^2": ^2.0.3
+  "brace-expansion@>=4.0.0 <5.0.12": 5.0.12
+  "lodash@^4": ^4.18.1
+  "nanoid@<3.3.18": 3.3.18
+  "postcss@<8.5.28": 8.5.28
+  "sharp@<0.35.4": 0.35.4
+  "browserslist@<=4.28.6": 4.28.7
+  "ws@<8.21.0": 8.21.0
+  "@ai-sdk/provider-utils@<3.0.28": 3.0.28
+  "js-yaml@>=4.0.0 <4.3.2": 4.3.2
+  "@humanfs/node@<0.16.8": 0.16.8
+  "brace-expansion@1.1.13": 1.1.21
+  "js-yaml@4.1.1": 4.3.2
+  "@humanfs/node@0.16.7": 0.16.8

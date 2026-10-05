@@ -1,6 +1,14 @@
 export const MODES = [
-  { id: "speed", label: "Speed", provider: "cerebras" },
-  { id: "quality", label: "Quality", provider: "gemini" },
+  {
+    id: "speed",
+    label: "Speed",
+    provider: "gemini",
+  },
+  {
+    id: "quality",
+    label: "Quality",
+    provider: "gemini",
+  },
 ] as const;
 
 export type ModeId = (typeof MODES)[number]["id"];

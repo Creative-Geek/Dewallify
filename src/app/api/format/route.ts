@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     }
 
     const resolvedProvider = resolveProvider(provider);
-    const llm = createModel(resolvedProvider);
+    const llm = createModel(resolvedProvider, provider);
     console.log(
       "Text received, length:",
       text?.length,
@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
       model: llm,
       system: buildSystemInstruction(options),
       prompt: text,
+      maxRetries: 1,
     });
 
     // Respond with the stream, sending chunks as they arrive

@@ -31,8 +31,8 @@
 ## Key Features
 
 - **AI-Powered Formatting**: Automatically transforms unstructured text into well-formatted Markdown.
-- **Multiple AI Providers**: Choose from a variety of AI models, including OpenAI, Groq, and Google Gemini.
-- **Speed vs Quality switcher**: Toggle between Speed (Cerebras) and Quality (Gemini) directly next to the Format button.
+- **Multiple AI Providers**: Choose from OpenAI and Google Gemini models.
+- **Speed vs Quality switcher**: Toggle between Gemini Flash Lite and Gemini Flash directly next to the Format button.
 - **Real-Time Streaming**: Watch the formatted text appear in real-time as the AI processes it.
 - **Clipboard Integration**: Easily copy the formatted Markdown to your clipboard with a single click.
 - **Clean & Modern UI**: A simple, intuitive interface built with Next.js and Shadcn UI.
@@ -67,9 +67,7 @@ Make sure you have [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/) i
 
    ```env
    OPENAI_API_KEY=...
-   GROQ_API_KEY=...
    GEMINI_API_KEY=...
-   CEREBRAS_API_KEY=...
    ```
 
 4. **Run the development server:**
